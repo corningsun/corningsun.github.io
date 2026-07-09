@@ -156,8 +156,8 @@
     <author>
       <name>Corning Sun</name>
     </author>
-    <category term="Java" scheme="https://corningsun.com/tags/Java/"/>
     <category term="Tools" scheme="https://corningsun.com/tags/Tools/"/>
+    <category term="Java" scheme="https://corningsun.com/tags/Java/"/>
     <category term="Idea" scheme="https://corningsun.com/tags/Idea/"/>
     <content>
       <![CDATA[<blockquote><p>记录自己用的 Idea 插件</p></blockquote><ul><li>Maven Helper</li><li>SonarLint</li><li>Alibaba Java Coding Guidelines</li><li>AceJump</li><li>Markdown support</li><li>PlantUML integration</li><li><a href="https://github.com/ZhangYuanSheng1217/RestfulTool">RestfulTool</a></li><li><a href="https://plugins.jetbrains.com/plugin/10080-rainbow-brackets">Rainbow Brackets</a></li><li><a href="https://github.com/mars-men/GsonFormatPlus">GsonFormatPlus</a></li></ul>]]>
