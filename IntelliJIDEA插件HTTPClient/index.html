@@ -1,37 +1,501 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="原文链接：https:&#x2F;&#x2F;github.com&#x2F;corningsun&#x2F;yuchigong&#x2F;edit&#x2F;httpClient&#x2F;httpClient&#x2F;README.md  界面客户端 使用手册  https:&#x2F;&#x2F;www.jetbrains.com&#x2F;help&#x2F;idea&#x2F;testing-restful-web-services.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IntelliJIDEA 插件 HTTPClient">
+<meta property="og:url" content="https://corningsun.github.io/IntelliJIDEA%E6%8F%92%E4%BB%B6HTTPClient/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="原文链接：https:&#x2F;&#x2F;github.com&#x2F;corningsun&#x2F;yuchigong&#x2F;edit&#x2F;httpClient&#x2F;httpClient&#x2F;README.md  界面客户端 使用手册  https:&#x2F;&#x2F;www.jetbrains.com&#x2F;help&#x2F;idea&#x2F;testing-restful-web-services.html">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g0v80r2s3ej30e60a3dg8.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0vi5l1uyuj31c00u00vg.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g0vitffcihj31c00u00uw.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xnyirr3qg30w20i547l.gif">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1g0vigan9atj31780u0djt.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0vjnuizmog30pj0hqaam.gif">
+<meta property="og:image" content="https://www.jetbrains.com/help/img/idea/2018.3/icons.vcs.history.svg@2x.png">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g0xnd91e2ag30w20i5qjd.gif">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tKfTcgy1g0xngeddspj30si0n4wg6.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xlokoo5hg30w30i27ap.gif">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xnun0pfng30w20i57n3.gif">
+<meta property="article:published_time" content="2019-03-12T08:30:24.000Z">
+<meta property="article:modified_time" content="2021-11-24T06:02:22.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="HTTPClient">
+<meta property="article:tag" content="IntelliJIDEA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tKfTcgy1g0v80r2s3ej30e60a3dg8.jpg">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/IntelliJIDEA%E6%8F%92%E4%BB%B6HTTPClient/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/IntelliJIDEA%E6%8F%92%E4%BB%B6HTTPClient/","path":"IntelliJIDEA插件HTTPClient/","title":"IntelliJIDEA 插件 HTTPClient"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>IntelliJIDEA 插件 HTTPClient | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%95%8C%E9%9D%A2%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">界面客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">2.</span> <span class="nav-text">文本客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E8%AF%B7%E6%B1%82%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">创建新的请求文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#live-templates"><span class="nav-number">2.3.</span> <span class="nav-text">live templates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81-HTTP-1-1-%E6%89%80%E6%9C%89%E6%96%B9%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">支持 HTTP 1.1 所有方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B"><span class="nav-number">2.5.</span> <span class="nav-text">演示项目简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA%E9%A1%B9%E7%9B%AE%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E5%AE%9E%E6%88%98"><span class="nav-number">2.6.</span> <span class="nav-text">演示项目接口调用实战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.6.1.</span> <span class="nav-text">登陆接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%8E%A5%E5%8F%A3"><span class="nav-number">2.6.2.</span> <span class="nav-text">测试接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%AF%B7%E6%B1%82%E5%8E%86%E5%8F%B2"><span class="nav-number">2.6.3.</span> <span class="nav-text">查看请求历史</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA%E6%8E%A5%E5%8F%A3%E9%87%8D%E6%9E%84-%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.7.</span> <span class="nav-text">演示接口重构 - 统一配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E9%85%8D%E7%BD%AE%EF%BC%8C%E5%9F%9F%E5%90%8D-%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.7.1.</span> <span class="nav-text">通用配置，域名 &#x2F; 端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE%EF%BC%8C%E7%94%A8%E6%88%B7%E5%90%8D-%E5%AF%86%E7%A0%81"><span class="nav-number">2.7.2.</span> <span class="nav-text">个人安全配置，用户名 &#x2F; 密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%87%8D%E6%9E%84%E5%90%8E%E7%9A%84%E8%AF%B7%E6%B1%82%E6%96%87%E4%BB%B6"><span class="nav-number">2.7.3.</span> <span class="nav-text">重构后的请求文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E8%AF%B7%E6%B1%82"><span class="nav-number">2.7.4.</span> <span class="nav-text">运行请求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-response-handler-scripts"><span class="nav-number">2.8.</span> <span class="nav-text">使用 response handler scripts</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">2.8.1.</span> <span class="nav-text">引用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95"><span class="nav-number">2.8.2.</span> <span class="nav-text">主要方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA%E6%8E%A5%E5%8F%A3%E9%87%8D%E6%9E%84-%E5%8A%A8%E6%80%81%E6%9B%B4%E6%96%B0-Cookie"><span class="nav-number">2.9.</span> <span class="nav-text">演示接口重构 - 动态更新 Cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BC%94%E7%A4%BA%E6%8E%A5%E5%8F%A3%E9%87%8D%E6%9E%84-%E6%B5%8B%E8%AF%95%E6%8E%A5%E5%8F%A3%E8%BF%94%E5%9B%9E"><span class="nav-number">2.10.</span> <span class="nav-text">演示接口重构 - 测试接口返回</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/IntelliJIDEA%E6%8F%92%E4%BB%B6HTTPClient/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="IntelliJIDEA 插件 HTTPClient | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          IntelliJIDEA 插件 HTTPClient
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-03-12 16:30:24" itemprop="dateCreated datePublished" datetime="2019-03-12T16:30:24+08:00">2019-03-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-11-24 14:02:22" itemprop="dateModified" datetime="2021-11-24T14:02:22+08:00">2021-11-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>原文链接：<a href="https://github.com/corningsun/yuchigong/edit/httpClient/httpClient/README.md">https://github.com/corningsun/yuchigong/edit/httpClient/httpClient/README.md</a></p>
+</blockquote>
+<h2 id="界面客户端"><a href="#界面客户端" class="headerlink" title="界面客户端"></a>界面客户端</h2><ul>
+<li>使用手册</li>
+</ul>
+<p><a href="https://www.jetbrains.com/help/idea/testing-restful-web-services.html">https://www.jetbrains.com/help/idea/testing-restful-web-services.html</a></p>
+<span id="more"></span>
+
+<ul>
+<li>Tools -&gt; HTTP Client -&gt; Test RESTful Web Service</li>
+</ul>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g0v80r2s3ej30e60a3dg8.jpg"></p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0vi5l1uyuj31c00u00vg.jpg"></p>
+<h2 id="文本客户端"><a href="#文本客户端" class="headerlink" title="文本客户端"></a>文本客户端</h2><ul>
+<li>使用手册</li>
+</ul>
+<p><a href="https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html">https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html</a></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>纯文本编写</li>
+<li>支持统一配置</li>
+<li>支持 scripts 脚本</li>
+</ul>
+<h3 id="创建新的请求文件"><a href="#创建新的请求文件" class="headerlink" title="创建新的请求文件"></a>创建新的请求文件</h3><ul>
+<li>Scratch files （全局文件）</li>
+<li>physical files（项目文件）</li>
+</ul>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g0vitffcihj31c00u00uw.jpg"></p>
+<h3 id="live-templates"><a href="#live-templates" class="headerlink" title="live templates"></a>live templates</h3><ul>
+<li><p>‘gtrp’ and ‘gtr’ create a GET request with or without query parameters;</p>
+</li>
+<li><p>‘ptr’ and ‘ptrp’ create a POST request with a simple or parameter-like body;</p>
+</li>
+<li><p>‘mptr’ and ‘fptr’ create a POST request to submit a form with a text or file field (multipart&#x2F;form-data);</p>
+</li>
+<li><p>Live Templates 演示</p>
+</li>
+</ul>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xnyirr3qg30w20i547l.gif"></p>
+<ul>
+<li>Live Templates 配置</li>
+</ul>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1g0vigan9atj31780u0djt.jpg"></p>
+<h3 id="支持-HTTP-1-1-所有方法"><a href="#支持-HTTP-1-1-所有方法" class="headerlink" title="支持 HTTP 1.1 所有方法"></a>支持 HTTP 1.1 所有方法</h3><p>POST、GET、PUT、DELETE、HEAD、OPTIONS、TRACE、CONNECT</p>
+<ul>
+<li>GET</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">### <span class="title class_">Get</span> request <span class="keyword">with</span> a header</span><br><span class="line"><span class="variable constant_">GET</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/ip</span></span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"></span><br><span class="line">### <span class="title class_">Get</span> request <span class="keyword">with</span> parameter</span><br><span class="line"><span class="variable constant_">GET</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/get?show_env=1</span></span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"></span><br><span class="line">### <span class="title class_">Get</span> request <span class="keyword">with</span> environment variables</span><br><span class="line"><span class="variable constant_">GET</span> &#123;&#123;host&#125;&#125;/get?show_env=&#123;&#123;show_env&#125;&#125;</span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"></span><br><span class="line">### <span class="title class_">Get</span> request <span class="keyword">with</span> disabled redirects</span><br><span class="line"># @no-redirect</span><br><span class="line"><span class="variable constant_">GET</span> <span class="attr">http</span>:<span class="comment">//httpbin.org/status/301</span></span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>POST</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">### <span class="title class_">Send</span> <span class="variable constant_">POST</span> request <span class="keyword">with</span> json body</span><br><span class="line"><span class="variable constant_">POST</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/post</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;id&quot;</span>: <span class="number">999</span>,</span><br><span class="line">  <span class="string">&quot;value&quot;</span>: <span class="string">&quot;content&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">### <span class="title class_">Send</span> <span class="variable constant_">POST</span> request <span class="keyword">with</span> body <span class="keyword">as</span> parameters</span><br><span class="line"><span class="variable constant_">POST</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/post</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">id=<span class="number">999</span>&amp;value=content</span><br><span class="line"></span><br><span class="line">### <span class="title class_">Send</span> a form <span class="keyword">with</span> the text and file fields</span><br><span class="line"><span class="variable constant_">POST</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/post</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: multipart/form-data; boundary=<span class="title class_">WebAppBoundary</span></span><br><span class="line"></span><br><span class="line">--<span class="title class_">WebAppBoundary</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Disposition</span>: form-data; name=<span class="string">&quot;element-name&quot;</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: text/plain</span><br><span class="line"></span><br><span class="line"><span class="title class_">Name</span></span><br><span class="line">--<span class="title class_">WebAppBoundary</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Disposition</span>: form-data; name=<span class="string">&quot;data&quot;</span>; filename=<span class="string">&quot;data.json&quot;</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&lt; ./request-form-data.<span class="property">json</span></span><br><span class="line">--<span class="title class_">WebAppBoundary</span>--</span><br><span class="line"></span><br><span class="line">###</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="演示项目简介"><a href="#演示项目简介" class="headerlink" title="演示项目简介"></a>演示项目简介</h3><ul>
+<li><p>Spring Boot - Spring Security</p>
+</li>
+<li><p>首页 <a href="http://localhost:8080/index.html">http://localhost:8080/index.html</a></p>
+</li>
+<li><p>登陆页面 <a href="http://localhost:8080/login.html">http://localhost:8080/login.html</a></p>
+</li>
+<li><p>测试接口 (有登陆验证) <a href="http://localhost:8080/api/security/test">http://localhost:8080/api/security/test</a></p>
+</li>
+<li><p>测试账号，用户名： lee，密码：123456</p>
+</li>
+<li><p>用浏览器直接访问测试接口会被强制跳转到登陆页面，登陆成功后返回接口调用结果。</p>
+</li>
+<li><p>原理是登陆校验成功返回 JSESSIONID，客户端将 JSESSIONID 存到 Cookie ，服务端根据 Cookie 验证是否登陆。</p>
+</li>
+</ul>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0vjnuizmog30pj0hqaam.gif"></p>
+<h3 id="演示项目接口调用实战"><a href="#演示项目接口调用实战" class="headerlink" title="演示项目接口调用实战"></a>演示项目接口调用实战</h3><h4 id="登陆接口"><a href="#登陆接口" class="headerlink" title="登陆接口"></a>登陆接口</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">POST</span> <span class="attr">http</span>:<span class="comment">//localhost:8080/api/login</span></span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">account=lee&amp;password=<span class="number">123456</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回 </span></span><br><span class="line"><span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="number">302</span> </span><br><span class="line"><span class="title class_">Set</span>-<span class="title class_">Cookie</span>: <span class="variable constant_">JSESSIONID</span>=<span class="variable constant_">A323D83D5E062588F4ACA433E891EA67</span>; <span class="title class_">Path</span>=/; <span class="title class_">HttpOnly</span></span><br><span class="line"><span class="title class_">Location</span>: <span class="attr">http</span>:<span class="comment">//localhost:8080/index.html</span></span><br><span class="line">... 略 </span><br></pre></td></tr></table></figure>
+
+
+<h4 id="测试接口"><a href="#测试接口" class="headerlink" title="测试接口"></a>测试接口</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> <span class="attr">http</span>:<span class="comment">//localhost:8080/api/security/test</span></span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"><span class="title class_">Cookie</span>: <span class="variable constant_">JSESSIONID</span>=<span class="variable constant_">A323D83D5E062588F4ACA433E891EA67</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回 </span></span><br><span class="line"><span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="number">200</span> </span><br><span class="line"></span><br><span class="line">you have been authenticated</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="查看请求历史"><a href="#查看请求历史" class="headerlink" title="查看请求历史"></a>查看请求历史</h4><ul>
+<li>点击右上角的按钮 <img src="https://www.jetbrains.com/help/img/idea/2018.3/icons.vcs.history.svg@2x.png" alt="Show HTTP Requests History"></li>
+</ul>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g0xnd91e2ag30w20i5qjd.gif"></p>
+<ul>
+<li>Tools | HTTP Client | Show HTTP Requests History</li>
+</ul>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0xngeddspj30si0n4wg6.jpg"></p>
+<h3 id="演示接口重构-统一配置"><a href="#演示接口重构-统一配置" class="headerlink" title="演示接口重构 - 统一配置"></a>演示接口重构 - 统一配置</h3><h4 id="通用配置，域名-端口"><a href="#通用配置，域名-端口" class="headerlink" title="通用配置，域名 &#x2F; 端口"></a>通用配置，域名 &#x2F; 端口</h4><ul>
+<li><code>rest-client.env.json</code> 或 <code>http-client.env.json</code></li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;default&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;local&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;host&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://localhost:8080&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="个人安全配置，用户名-密码"><a href="#个人安全配置，用户名-密码" class="headerlink" title="个人安全配置，用户名 &#x2F; 密码"></a>个人安全配置，用户名 &#x2F; 密码</h4><ul>
+<li><code>rest-client.private.env.json</code> 或 <code>http-client.private.env.json</code></li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;default&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;local&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;account&quot;</span><span class="punctuation">:</span> <span class="string">&quot;lee&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;123456&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+<h4 id="重构后的请求文件"><a href="#重构后的请求文件" class="headerlink" title="重构后的请求文件"></a>重构后的请求文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">### 登陆 </span><br><span class="line"><span class="variable constant_">POST</span> &#123;&#123;host&#125;&#125;/api/login</span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">account=lee&amp;password=<span class="number">123456</span></span><br><span class="line"></span><br><span class="line">### 测试接口 </span><br><span class="line"><span class="variable constant_">GET</span> &#123;&#123;host&#125;&#125;/api/security/test</span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"><span class="title class_">Cookie</span>: <span class="variable constant_">JSESSIONID</span>=1C1DD3EB60DEE60664FB0BFE0F1C9942</span><br><span class="line"></span><br><span class="line">###</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="运行请求"><a href="#运行请求" class="headerlink" title="运行请求"></a>运行请求</h4><p>点击运行按钮，可以选择对应的环境</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xlokoo5hg30w30i27ap.gif"></p>
+<h3 id="使用-response-handler-scripts"><a href="#使用-response-handler-scripts" class="headerlink" title="使用 response handler scripts"></a>使用 response handler scripts</h3><h4 id="引用方式"><a href="#引用方式" class="headerlink" title="引用方式"></a>引用方式</h4><ul>
+<li>直接引用</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> host/api/test</span><br><span class="line"></span><br><span class="line">&gt; &#123;%</span><br><span class="line"><span class="comment">// Response Handler Script</span></span><br><span class="line">...</span><br><span class="line">%&#125;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>文件引用</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> host/api/test</span><br><span class="line"></span><br><span class="line">&gt; scripts/my-script.<span class="property">js</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="主要方法"><a href="#主要方法" class="headerlink" title="主要方法"></a>主要方法</h4><p><a href="https://www.jetbrains.com/help/idea/http-response-handling-api-reference.html">HTTP Response handling API reference</a></p>
+<ul>
+<li><p>client</p>
+<ul>
+<li>client.global<ul>
+<li>set(varName, varValue) &#x2F;&#x2F; 设置全局变量</li>
+<li>get(varName) &#x2F;&#x2F; 获取全局变量</li>
+<li>isEmpty &#x2F;&#x2F; 检查 global 是否为空</li>
+<li>clear(varName) &#x2F;&#x2F; 删除变量</li>
+<li>clearAll &#x2F;&#x2F; 删除所有变量</li>
+</ul>
+</li>
+<li>client.test(testName, func) &#x2F;&#x2F; 创建一个名称为 <code>testName</code> 的测试</li>
+<li>client.assert(condition, message) &#x2F;&#x2F; 校验条件 <code>condition</code> 是否成立，否则抛出异常 <code>message</code></li>
+<li>client.log(text) &#x2F;&#x2F; 打印日志</li>
+</ul>
+</li>
+<li><p>response</p>
+<ul>
+<li>response.body &#x2F;&#x2F; 字符串 或  JSON (如果 <code>content-type</code> 为 <code>application/json</code>.)</li>
+<li>response.headers<ul>
+<li>valueOf(headerName) &#x2F;&#x2F; 返回第一个匹配 headerName 的值，如果没有匹配的返回 null</li>
+<li>valuesOf(headerName) &#x2F;&#x2F; 返回所有匹配 headerName 的值的数组，如果没有匹配的返回空数组</li>
+</ul>
+</li>
+<li>response.status &#x2F;&#x2F; Http 状态码，如： 200 &#x2F; 400</li>
+<li>response.contentType<ul>
+<li>mimeType &#x2F;&#x2F; 返回 MIME 类型，如：<code>text/plain</code>, <code>text/xml</code>, <code>application/json</code>.</li>
+<li>charset &#x2F;&#x2F; 返回编码 UTF-8 等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方法调用示例</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> <span class="attr">https</span>:<span class="comment">//httpbin.org/status/200</span></span><br><span class="line"></span><br><span class="line">&gt; &#123;%</span><br><span class="line">    client.<span class="title function_">test</span>(<span class="string">&quot;Request executed successfully&quot;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        client.<span class="title function_">assert</span>(response.<span class="property">status</span> === <span class="number">200</span>, <span class="string">&quot;Response status is not 200&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">%&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="演示接口重构-动态更新-Cookie"><a href="#演示接口重构-动态更新-Cookie" class="headerlink" title="演示接口重构 - 动态更新 Cookie"></a>演示接口重构 - 动态更新 Cookie</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">### 登陆 </span><br><span class="line"><span class="variable constant_">POST</span> &#123;&#123;host&#125;&#125;/api/login</span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">account=&#123;&#123;account&#125;&#125;&amp;password=&#123;&#123;password&#125;&#125;</span><br><span class="line"></span><br><span class="line">&gt; &#123;% client.<span class="property">global</span>.<span class="title function_">set</span>(<span class="string">&quot;Set-Cookie&quot;</span>, response.<span class="property">headers</span>.<span class="title function_">valueOf</span>(<span class="string">&quot;Set-Cookie&quot;</span>)) %&#125;</span><br><span class="line"></span><br><span class="line">### 测试接口 </span><br><span class="line"><span class="variable constant_">GET</span> &#123;&#123;host&#125;&#125;/api/security/test</span><br><span class="line"><span class="title class_">Accept</span>: application/json</span><br><span class="line"><span class="title class_">Cookie</span>: &#123;&#123;<span class="title class_">Set</span>-<span class="title class_">Cookie</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="演示接口重构-测试接口返回"><a href="#演示接口重构-测试接口返回" class="headerlink" title="演示接口重构 - 测试接口返回"></a>演示接口重构 - 测试接口返回</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">### 登陆 </span><br><span class="line"><span class="variable constant_">POST</span> &#123;&#123;host&#125;&#125;/api/login</span><br><span class="line"><span class="title class_">Content</span>-<span class="title class_">Type</span>: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">account=&#123;&#123;account&#125;&#125;&amp;password=&#123;&#123;password&#125;&#125;</span><br><span class="line"></span><br><span class="line">&gt; &#123;% client.<span class="property">global</span>.<span class="title function_">set</span>(<span class="string">&quot;Set-Cookie&quot;</span>, response.<span class="property">headers</span>.<span class="title function_">valueOf</span>(<span class="string">&quot;Set-Cookie&quot;</span>)) %&#125;</span><br><span class="line"></span><br><span class="line">### 测试接口 </span><br><span class="line"><span class="variable constant_">GET</span> &#123;&#123;host&#125;&#125;/api/security/test</span><br><span class="line"><span class="title class_">Accept</span>: text/plain</span><br><span class="line"><span class="title class_">Cookie</span>: &#123;&#123;<span class="title class_">Set</span>-<span class="title class_">Cookie</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line">&gt; login_demo_4_js_test.<span class="property">js</span></span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>login_demo_4_js_test.js</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">client.<span class="title function_">test</span>(<span class="string">&quot;Request executed successfully&quot;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    client.<span class="title function_">assert</span>(response.<span class="property">status</span> === <span class="number">200</span>, <span class="string">&quot;Response status is not 200&quot;</span>);</span><br><span class="line">    client.<span class="title function_">log</span>(<span class="string">&quot;response.body=&quot;</span> + response.<span class="property">body</span>);</span><br><span class="line">    client.<span class="title function_">assert</span>(response.<span class="property">body</span> === <span class="string">&#x27;you have been authenticated&#x27;</span>, <span class="string">&quot;Response body check fail&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g0xnun0pfng30w20i57n3.gif"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/IntelliJIDEA/" rel="tag"># IntelliJIDEA</a>
+              <a href="/tags/HTTPClient/" rel="tag"># HTTPClient</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/MacSettings/" rel="prev" title="Mac 常用设置">
+                  <i class="fa fa-angle-left"></i> Mac 常用设置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/My2021/" rel="next" title="My2021">
+                  My2021 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

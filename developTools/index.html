@@ -1,37 +1,398 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="工欲善其事必先利其器！以下工具中 ** 加粗 ** 的为本人使用，不一定是最好的，可以都尝试下，选择最适合自己的。 文本编辑工具 Notepad++ 推荐 15 款很棒的文本编辑器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发工具整合">
+<meta property="og:url" content="https://corningsun.github.io/developTools/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="工欲善其事必先利其器！以下工具中 ** 加粗 ** 的为本人使用，不一定是最好的，可以都尝试下，选择最适合自己的。 文本编辑工具 Notepad++ 推荐 15 款很棒的文本编辑器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cdn1.snapgram.co/imgs/2015/03/16/Everything.png">
+<meta property="article:published_time" content="2015-03-12T09:44:18.000Z">
+<meta property="article:modified_time" content="2016-12-28T08:30:35.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn1.snapgram.co/imgs/2015/03/16/Everything.png">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/developTools/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/developTools/","path":"developTools/","title":"开发工具整合"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>开发工具整合 | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">文本编辑工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Markdown-%E7%BC%96%E8%BE%91%E5%B7%A5%E5%85%B7"><span class="nav-number">2.</span> <span class="nav-text">Markdown 编辑工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PDF-%E9%98%85%E8%AF%BB%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">PDF 阅读器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%94%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">笔记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BF%BB%E8%AF%91"><span class="nav-number">5.</span> <span class="nav-text">翻译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E6%A3%80%E7%B4%A2%E5%B7%A5%E5%85%B7"><span class="nav-number">6.</span> <span class="nav-text">文件检索工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%AF%B9%E6%AF%94"><span class="nav-number">7.</span> <span class="nav-text">文件对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IDE"><span class="nav-number">8.</span> <span class="nav-text">IDE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="nav-number">9.</span> <span class="nav-text">浏览器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%BB%E5%B9%BF%E5%91%8A"><span class="nav-number">10.</span> <span class="nav-text">去广告</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86"><span class="nav-number">11.</span> <span class="nav-text">数据库管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%89%98%E7%AE%A1%E5%B9%B3%E5%8F%B0"><span class="nav-number">12.</span> <span class="nav-text">代码托管平台</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-number">13.</span> <span class="nav-text">代码管理工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE"><span class="nav-number">14.</span> <span class="nav-text">思维导图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7"><span class="nav-number">15.</span> <span class="nav-text">效率工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E5%AD%97%E7%BB%83%E4%B9%A0"><span class="nav-number">16.</span> <span class="nav-text">打字练习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="nav-number">17.</span> <span class="nav-text">任务管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows-%E4%BC%98%E5%8C%96"><span class="nav-number">18.</span> <span class="nav-text">Windows 优化</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/developTools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="开发工具整合 | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          开发工具整合
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-03-12 17:44:18" itemprop="dateCreated datePublished" datetime="2015-03-12T17:44:18+08:00">2015-03-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2016-12-28 16:30:35" itemprop="dateModified" datetime="2016-12-28T16:30:35+08:00">2016-12-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>工欲善其事必先利其器！<br>以下工具中 ** 加粗 ** 的为本人使用，不一定是最好的，可以都尝试下，选择最适合自己的。</p>
+<h1 id="文本编辑工具"><a href="#文本编辑工具" class="headerlink" title="文本编辑工具"></a>文本编辑工具</h1><ul>
+<li><strong><a href="http://notepad-plus-plus.org/" title="http:&#x2F;&#x2F;notepad-plus-plus.org&#x2F;">Notepad++</a></strong></li>
+<li><a href="http://www.oschina.net/news/17858/15-best-text-editors/">推荐 15 款很棒的文本编辑器</a></li>
+</ul>
+<span id="more"></span>
+
+<h1 id="Markdown-编辑工具"><a href="#Markdown-编辑工具" class="headerlink" title="Markdown 编辑工具"></a>Markdown 编辑工具</h1><ul>
+<li><strong><a href="http://markdownpad.com/">MarkdownPad</a></strong></li>
+</ul>
+<h1 id="PDF-阅读器"><a href="#PDF-阅读器" class="headerlink" title="PDF 阅读器"></a>PDF 阅读器</h1><ul>
+<li><strong><a href="http://www.jisupdf.com/">急速 PDF 阅读器</a></strong></li>
+<li><a href="https://get.adobe.com/cn/reader/">Adobe Reader</a></li>
+<li><a href="http://www.foxitsoftware.cn/">福昕 PDF</a></li>
+</ul>
+<h1 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h1><ul>
+<li><strong><a href="http://note.youdao.com/" title="http:&#x2F;&#x2F;note.youdao.com&#x2F;">有道云笔记</a></strong></li>
+<li><a href="http://www.wiz.cn/">为知笔记</a></li>
+<li><a href="https://www.yinxiang.com/">印象笔记</a></li>
+</ul>
+<h1 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h1><ul>
+<li><strong><a href="http://dict.youdao.com/" title="http:&#x2F;&#x2F;dict.youdao.com&#x2F;">有道词典</a></strong></li>
+<li><a href="http://www.pc6.com/pc/fanyirj/">pc6 翻译软件大全</a></li>
+</ul>
+<h1 id="文件检索工具"><a href="#文件检索工具" class="headerlink" title="文件检索工具"></a>文件检索工具</h1><ul>
+<li><strong><a href="http://www.voidtools.com/" title="http:&#x2F;&#x2F;www.voidtools.com&#x2F;">Everything</a></strong></li>
+</ul>
+<p><img src="http://cdn1.snapgram.co/imgs/2015/03/16/Everything.png" alt="Everything"></p>
+<h1 id="文件对比"><a href="#文件对比" class="headerlink" title="文件对比"></a>文件对比</h1><ul>
+<li><strong><a href="http://winmerge.org/" title="http:&#x2F;&#x2F;winmerge.org&#x2F;">Winmerge</a></strong></li>
+</ul>
+<h1 id="IDE"><a href="#IDE" class="headerlink" title="IDE"></a>IDE</h1><ul>
+<li><strong><a href="http://www.eclipse.org/downloads/" title="http:&#x2F;&#x2F;www.eclipse.org&#x2F;downloads&#x2F;">Eclipse</a></strong></li>
+<li><a href="http://www.oschina.net/news/16563/15-free-ides-for-developers">15 款免费 IDE，推荐给开发者</a></li>
+</ul>
+<h1 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a>浏览器</h1><ul>
+<li><strong><a href="http://www.firefox.com.cn/download/">FireFox</a></strong><br><a href="http://www.open-open.com/news/view/34efff">Web 开发人员必备的 20 个实用 Firefox 插件</a><br>插件实在太多，找到实用的最重要！</li>
+</ul>
+<h1 id="去广告"><a href="#去广告" class="headerlink" title="去广告"></a>去广告</h1><ul>
+<li><strong><a href="http://www.adbyby.com/">广告屏蔽大师</a></strong><br>** 吐血推荐 **！绝对好东西！！谁用谁知道！！！看视频再也不用等一分钟了！！！！</li>
+</ul>
+<iframe src="http://www.adbyby.com/"></iframe>
+
+<h1 id="数据库管理"><a href="#数据库管理" class="headerlink" title="数据库管理"></a>数据库管理</h1><ul>
+<li><strong><a href="http://dbeaver.jkiss.org/">DBeaver</a></strong></li>
+</ul>
+<h1 id="代码托管平台"><a href="#代码托管平台" class="headerlink" title="代码托管平台"></a>代码托管平台</h1><ul>
+<li><a href="https://github.com/">Github</a></li>
+<li><a href="https://gitcafe.com/">Gitcafe</a> 天朝专用</li>
+</ul>
+<h1 id="代码管理工具"><a href="#代码管理工具" class="headerlink" title="代码管理工具"></a>代码管理工具</h1><ul>
+<li><strong><a href="http://git-scm.com/download/">Git</a></strong></li>
+<li><strong><a href="http://tortoisesvn.net/downloads.html">SVN</a></strong></li>
+<li><a href="http://www.eclipse.org/eclipse/platform-cvs/">CVS</a></li>
+</ul>
+<h1 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h1><ul>
+<li><a href="http://www.xmind.net/">XMind</a></li>
+</ul>
+<h1 id="效率工具"><a href="#效率工具" class="headerlink" title="效率工具"></a>效率工具</h1><ul>
+<li>剪贴板工具<br><strong><a href="http://www.sogou.com/web?query=clipx">ClipX</a></strong><br><a href="http://www.d9soft.com/class/44_1.htm">其他</a></li>
+</ul>
+<h1 id="打字练习"><a href="#打字练习" class="headerlink" title="打字练习"></a>打字练习</h1><ul>
+<li><a href="http://cp.iciba.com/typeeasy.html" title="http:&#x2F;&#x2F;cp.iciba.com&#x2F;typeeasy.html">金山打字通</a></li>
+</ul>
+<h1 id="任务管理"><a href="#任务管理" class="headerlink" title="任务管理"></a>任务管理</h1><ul>
+<li><a href="https://www.wunderlist.com/">Wunderlist &#x2F; 奇妙清单</a></li>
+</ul>
+<h1 id="Windows-优化"><a href="#Windows-优化" class="headerlink" title="Windows 优化"></a>Windows 优化</h1><ul>
+<li><a href="http://www.youjianjia.com/">右键管家</a></li>
+<li><a href="http://mofang.ruanmei.com/help/19.html">魔方小助手</a></li>
+<li><a href="http://www.5vdd.com/">华华鼠标自动点击器</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"># Tools</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/GradleStart/" rel="prev" title="Gradle 入门">
+                  <i class="fa fa-angle-left"></i> Gradle 入门
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/WicketStart/" rel="next" title="Wicket 入门">
+                  Wicket 入门 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

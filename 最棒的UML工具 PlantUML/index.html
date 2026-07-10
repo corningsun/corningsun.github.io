@@ -1,37 +1,340 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="特点 免费 类似 markdown 的纯文本编写，自动美化 Java 实现，多平台支持 超多插件  PlantUML 官网： http:&#x2F;&#x2F;plantuml.com&#x2F;Atom 插件 UML 实时预览：https:&#x2F;&#x2F;atom.io&#x2F;packages&#x2F;plantuml-preview UML 文本高亮：https:&#x2F;&#x2F;atom.io&#x2F;packages&#x2F;language-plantuml  效果图 示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最棒的 UML 工具 PlantUML">
+<meta property="og:url" content="https://corningsun.github.io/%E6%9C%80%E6%A3%92%E7%9A%84UML%E5%B7%A5%E5%85%B7%20PlantUML/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="特点 免费 类似 markdown 的纯文本编写，自动美化 Java 实现，多平台支持 超多插件  PlantUML 官网： http:&#x2F;&#x2F;plantuml.com&#x2F;Atom 插件 UML 实时预览：https:&#x2F;&#x2F;atom.io&#x2F;packages&#x2F;plantuml-preview UML 文本高亮：https:&#x2F;&#x2F;atom.io&#x2F;packages&#x2F;language-plantuml  效果图 示">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-10-31-031558.png-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-10-31-060123.jpg-o">
+<meta property="article:published_time" content="2017-10-31T03:07:00.000Z">
+<meta property="article:modified_time" content="2017-10-31T06:01:39.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="PlantUML">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://corningsun.qiniudn.com/blog/2017-10-31-031558.png-o">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/%E6%9C%80%E6%A3%92%E7%9A%84UML%E5%B7%A5%E5%85%B7%20PlantUML/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/%E6%9C%80%E6%A3%92%E7%9A%84UML%E5%B7%A5%E5%85%B7%20PlantUML/","path":"最棒的UML工具 PlantUML/","title":"最棒的 UML 工具 PlantUML"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>最棒的 UML 工具 PlantUML | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PlantUML-%E5%AE%98%E7%BD%91%EF%BC%9A-http-plantuml-com"><span class="nav-number">2.</span> <span class="nav-text">PlantUML 官网： http:&#x2F;&#x2F;plantuml.com&#x2F;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Atom-%E6%8F%92%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">Atom 插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">效果图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">示例</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/%E6%9C%80%E6%A3%92%E7%9A%84UML%E5%B7%A5%E5%85%B7%20PlantUML/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="最棒的 UML 工具 PlantUML | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          最棒的 UML 工具 PlantUML
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2017-10-31 11:07:00 / 修改时间：14:01:39" itemprop="dateCreated datePublished" datetime="2017-10-31T11:07:00+08:00">2017-10-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools/PlantUML/" itemprop="url" rel="index"><span itemprop="name">PlantUML</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>免费</li>
+<li>类似 markdown 的纯文本编写，自动美化</li>
+<li>Java 实现，多平台支持</li>
+<li>超多插件</li>
+</ul>
+<h2 id="PlantUML-官网：-http-plantuml-com"><a href="#PlantUML-官网：-http-plantuml-com" class="headerlink" title="PlantUML 官网： http://plantuml.com/"></a><a href="http://plantuml.com/">PlantUML 官网： http://plantuml.com/</a></h2><h2 id="Atom-插件"><a href="#Atom-插件" class="headerlink" title="Atom 插件"></a>Atom 插件</h2><ul>
+<li><a href="https://atom.io/packages/plantuml-preview">UML 实时预览：https://atom.io/packages/plantuml-preview</a></li>
+<li><a href="https://atom.io/packages/language-plantuml">UML 文本高亮：https://atom.io/packages/language-plantuml</a></li>
+</ul>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><p><img src="http://corningsun.qiniudn.com/blog/2017-10-31-031558.png-o"></p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@startuml</span><br><span class="line"></span><br><span class="line">abstract class 车 </span><br><span class="line"></span><br><span class="line">class 小汽车</span><br><span class="line"> 车 &lt;|.. 小汽车 : 实现 </span><br><span class="line"></span><br><span class="line">class 轮胎</span><br><span class="line">class 发动机</span><br><span class="line"> 小汽车 *-- 轮胎 : 组合 </span><br><span class="line"> 小汽车 *-- 发动机 </span><br><span class="line"></span><br><span class="line">class SUV</span><br><span class="line"> 小汽车 &lt;|-- SUV : 泛化 </span><br><span class="line"></span><br><span class="line">class 自行车</span><br><span class="line"> 车 &lt;|.. 自行车 </span><br><span class="line"></span><br><span class="line">class 学生</span><br><span class="line"> 自行车 &lt;.. 学生 : 依赖 </span><br><span class="line"></span><br><span class="line">class 班级</span><br><span class="line">class 身份证</span><br><span class="line"> 学生 --o 班级 : 聚合 </span><br><span class="line"> 学生 -- 身份证 : 关联</span><br><span class="line"></span><br><span class="line">@enduml</span><br></pre></td></tr></table></figure>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-10-31-060123.jpg-o"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"># Tools</a>
+              <a href="/tags/PlantUML/" rel="tag"># PlantUML</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/DaVinci/" rel="prev" title="DaVinci">
+                  <i class="fa fa-angle-left"></i> DaVinci
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/BestMovie/" rel="next" title="口碑最好的一百部电影">
+                  口碑最好的一百部电影 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

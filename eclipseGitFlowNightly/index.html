@@ -1,37 +1,555 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Git FlowGit Flow 是构建在 Git 之上的一个组织软件开发活动的模型，是在 Git 之上构建的一项软件开发最佳实践。Git Flow 是一套使用 Git 进行源代码管理时的一套行为规范和简化部分 Git 操作的工具。  基于 git 的源代码管理模型——git flow A successful Git branching model  Git Flow Nightly是 Ecli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eclipse 插件 Gitflow Nightly">
+<meta property="og:url" content="https://corningsun.github.io/eclipseGitFlowNightly/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="Git FlowGit Flow 是构建在 Git 之上的一个组织软件开发活动的模型，是在 Git 之上构建的一项软件开发最佳实践。Git Flow 是一套使用 Git 进行源代码管理时的一套行为规范和简化部分 Git 操作的工具。  基于 git 的源代码管理模型——git flow A successful Git branching model  Git Flow Nightly是 Ecli">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-035034.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-035858.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071006.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071029.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071115.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071154.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071226.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071354.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071458.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071526.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071550.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071653.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071718.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071736.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071751.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-071943.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-072001.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-072036.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-073340.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074239.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074520.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074535.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074615.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074724.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074740.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074750.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074829.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074843.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-074912.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075014.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075033.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075046.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075100.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075114.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075124.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-075154.jpg-o">
+<meta property="article:published_time" content="2017-03-02T03:32:24.000Z">
+<meta property="article:modified_time" content="2017-03-02T03:32:24.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="Tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-035034.jpg-o">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/eclipseGitFlowNightly/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/eclipseGitFlowNightly/","path":"eclipseGitFlowNightly/","title":"Eclipse 插件 Gitflow Nightly"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Eclipse 插件 Gitflow Nightly | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-Flow"><span class="nav-number">1.</span> <span class="nav-text">Git Flow</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-Flow-Nightly"><span class="nav-number">2.</span> <span class="nav-text">Git Flow Nightly</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-Flow-Nightly-%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">Git Flow Nightly 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Git-Flow-Nightly-%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.</span> <span class="nav-text">Git Flow Nightly 使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-GitFlow"><span class="nav-number">2.2.1.</span> <span class="nav-text">初始化 GitFlow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%8A%9F%E8%83%BD%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.2.</span> <span class="nav-text">新功能流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%88%E6%9C%AC%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.3.</span> <span class="nav-text">版本发布流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A7%E6%80%A5%E4%BF%AE%E5%A4%8D%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.4.</span> <span class="nav-text">紧急修复流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%8F%91%E5%B8%83%E6%B5%81%E7%A8%8B"><span class="nav-number">2.2.5.</span> <span class="nav-text">项目发布流程</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/eclipseGitFlowNightly/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Eclipse 插件 Gitflow Nightly | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Eclipse 插件 Gitflow Nightly
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-03-02 11:32:24" itemprop="dateCreated datePublished" datetime="2017-03-02T11:32:24+08:00">2017-03-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools/" itemprop="url" rel="index"><span itemprop="name">Tools</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="Git-Flow"><a href="#Git-Flow" class="headerlink" title="Git Flow"></a>Git Flow</h1><p>Git Flow 是构建在 Git 之上的一个组织软件开发活动的模型，是在 Git 之上构建的一项软件开发最佳实践。Git Flow 是一套使用 Git 进行源代码管理时的一套行为规范和简化部分 Git 操作的工具。</p>
+<ul>
+<li><a href="http://www.ituring.com.cn/article/56870">基于 git 的源代码管理模型——git flow</a></li>
+<li><a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model</a></li>
+</ul>
+<h1 id="Git-Flow-Nightly"><a href="#Git-Flow-Nightly" class="headerlink" title="Git Flow Nightly"></a>Git Flow Nightly</h1><p>是 Eclipse 中的插件，可以通过界面操作实现 <code>Git Flow</code> 中的功能。</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-03-02-035034.jpg-o"></p>
+<span id="more"></span>
+
+<h2 id="Git-Flow-Nightly-安装"><a href="#Git-Flow-Nightly-安装" class="headerlink" title="Git Flow Nightly 安装"></a>Git Flow Nightly 安装</h2><ul>
+<li><p>方法 1：通过 Eclipse marketplace 安装：<code>https://marketplace.eclipse.org/content/gitflow-nightly</code></p>
+</li>
+<li><p>方法 2：通过 Eclipse 更新地址安装（&#x3D;&#x3D; 推荐 &#x3D;&#x3D;）：<code>http://download.eclipse.org/egit/updates-stable-nightly/</code></p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-035858.jpg-o"></p>
+</li>
+</ul>
+<h2 id="Git-Flow-Nightly-使用"><a href="#Git-Flow-Nightly-使用" class="headerlink" title="Git Flow Nightly 使用"></a>Git Flow Nightly 使用</h2><h3 id="初始化-GitFlow"><a href="#初始化-GitFlow" class="headerlink" title="初始化 GitFlow"></a>初始化 GitFlow</h3><ol>
+<li><p>   从 Git 仓库导出项目到 Eclipse</p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071006.jpg-o"></p>
+</li>
+<li><p>   初始化 GitFlow</p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071029.jpg-o"><br>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071115.jpg-o"><br>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071154.jpg-o"></p>
+</li>
+</ol>
+<h3 id="新功能流程"><a href="#新功能流程" class="headerlink" title="新功能流程"></a>新功能流程</h3><ol>
+<li><p>开始新功能分支</p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071226.jpg-o"></p>
+<blockquote>
+<p>输入新功能名称，可以为任意名称</p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071354.jpg-o"></p>
+</li>
+<li><p>在新功能分支中完成编码工作</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071458.jpg-o"></p>
+</li>
+<li><p>提交修改</p>
+<blockquote>
+<p>注意只 commit 到本地仓库，不要 push；</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071526.jpg-o"></p>
+</li>
+<li><p>结束新功能分支</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071550.jpg-o"></p>
+</li>
+<li><p>选择分支结束后处理方式</p>
+<ul>
+<li>Squash，将分支中的 commit 合并为一次提交</li>
+<li>Keep branch，保留分支，不删除</li>
+</ul>
+<blockquote>
+<p>建议不要勾选，使用默认的配置就可以了。</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071653.jpg-o"></p>
+</li>
+<li><p>查看结果</p>
+<blockquote>
+<p>新功能分支中的内容被合并到本地 develop 分支了；<br>新功能分支被删除了；</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071718.jpg-o"></p>
+</li>
+<li><p>合并并 push 本地 develop 分支</p>
+<ul>
+<li>执行 pull，拉取远程 develop 到本地，会自动与本地 develop 合并；</li>
+<li>合并存在冲突时，需要手动处理；</li>
+<li>处理完成后 push 到远程 develop 分支上。</li>
+</ul>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071736.jpg-o"></p>
+</li>
+<li><p>结束</p>
+<blockquote>
+<p>可以看到远程 develop 分支和本地 develop 分支内容已经一致。</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071751.jpg-o"></p>
+</li>
+</ol>
+<h3 id="版本发布流程"><a href="#版本发布流程" class="headerlink" title="版本发布流程"></a>版本发布流程</h3><ol>
+<li><p>开始新版本分支</p>
+<blockquote>
+<p>注意只有在 develop 分支已经通过所有测试后才考虑创建 release 分支，它原则上只做版本说明等编写。</p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-071943.jpg-o"></p>
+<blockquote>
+<p>Release 分支的命名要与 Maven 版本号一致，因为在结束发布分支时，它还作为标签的命名。</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-072001.jpg-o"></p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-072036.jpg-o"></p>
+</li>
+<li><p>   修改系统版本</p>
+<blockquote>
+<p>系统版本命名规范可参考 <a href="https://www.douban.com/note/187597743/" title="https:&#x2F;&#x2F;www.douban.com&#x2F;note&#x2F;187597743&#x2F;">豆瓣版本命名规范</a><br>注意发布的版本中不允许依赖 ***-SNAPSHOT** 的 JAR 包，否则该 JAR 包重新发布后会导致，标签中的代码依赖错误。</p>
+</blockquote>
+<p>   <img src="http://corningsun.qiniudn.com/blog/2017-03-02-073340.jpg-o"></p>
+</li>
+<li><p>   修改变更历史</p>
+<blockquote>
+<p>文件为项目根目录下：CHANGELOG<br>编码为 UTF-8<br>格式参考 <a href="http://archive.apache.org/dist/wicket/7.6.0/CHANGELOG-7.x">Wicket CHANGELOG</a><br>变更历史建议在每做一个新功能时添加，再对比下 <code>git commit</code> 日志，补充完整。  </p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074239.jpg-o"></p>
+</li>
+<li><p>   提交修改</p>
+<blockquote>
+<p>注意为 <code>commit</code>，不要 <code>push</code></p>
+</blockquote>
+<p>   <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074520.jpg-o"></p>
+</li>
+<li><p>结束发布分支</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074535.jpg-o"></p>
+<blockquote>
+<p>可以看到：<br>release 分支被合并到了本地 develop 和 master 分支；<br>release 分支被删除了；<br>从本地 master 分支创建了新的标签 (Tag)，标签名为 release 分支的名称；  </p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074615.jpg-o"></p>
+</li>
+<li><p>Push 本地分支</p>
+<blockquote>
+<p>Push 本地 develop 分支</p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074724.jpg-o"></p>
+<blockquote>
+<p>Push 本地 master 分支<br>如果无权限修改 master 分支，通知项目管理员就可以了。</p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074740.jpg-o"></p>
+<blockquote>
+<p>Push 标签 1.0.0</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074750.jpg-o"></p>
+</li>
+<li><p>查看结果</p>
+<blockquote>
+<p>访问 Git 仓库查看结果<br>标签</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074829.jpg-o"></p>
+<blockquote>
+<p>变更历史</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074843.jpg-o"><br>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-074912.jpg-o"></p>
+</li>
+</ol>
+<h3 id="紧急修复流程"><a href="#紧急修复流程" class="headerlink" title="紧急修复流程"></a>紧急修复流程</h3><p>当生产环境中的软件遇到了异常情况或者发现了严重到必须立即修复的软件缺陷的时候，就需要从 master 分支上指定的 TAG 版本派生 hotfix 分支来组织代码的紧急修复工作。  </p>
+<blockquote>
+<p>注意：hotfix 只从 TAG 发出，而且结束后会生成新的 TAG。</p>
+</blockquote>
+<ol>
+<li><p>开始 hotfix 分支</p>
+<blockquote>
+<p>Hotfix 的命名与 release 类似，对于 X.X.X，第三位为修复版本号，使用自增方式就可以了。</p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075014.jpg-o"><br>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075033.jpg-o"></p>
+</li>
+<li><p>修复 BUG</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075046.jpg-o"></p>
+</li>
+<li><p>修改版本和变更历史</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075100.jpg-o"><br>  <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075114.jpg-o"></p>
+</li>
+<li><p>结束 hotfix</p>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075124.jpg-o"></p>
+<blockquote>
+<p>可以看到：<br>Hotfix 分支被合并到了 develop 和 master<br>Hotfix 分支被删除了<br>从 master 分支创建了 Tag，名称为 hotfix 名称  </p>
+</blockquote>
+<p> <img src="http://corningsun.qiniudn.com/blog/2017-03-02-075154.jpg-o"></p>
+</li>
+<li><p>Push 本地分支</p>
+<ul>
+<li>略 *</li>
+</ul>
+</li>
+</ol>
+<h3 id="项目发布流程"><a href="#项目发布流程" class="headerlink" title="项目发布流程"></a>项目发布流程</h3><ol>
+<li><p>项目发布约束</p>
+<ul>
+<li>必须从 TAG 进行发布</li>
+<li>TAG 对应的版本都是非 SNAPSHOT 的</li>
+<li>TAG 依赖的项目也都是非 SNAPSHOT 的</li>
+<li>每个 TAG 都必须在公司 maven 仓库中存在对应的 POM 文件或 jar 包和源码</li>
+<li>最好使用专门的打包机进行项目打包，以避免本地项目没有发布的情况</li>
+</ul>
+</li>
+<li><p>普通 jar 包发布</p>
+<ol>
+<li>将对应的 Tag 版本导出到本地</li>
+<li>执行 Maven 发布命令：mvn clean deploy</li>
+<li>结束</li>
+</ol>
+</li>
+<li><p>产品 ZIP 包发布</p>
+<ol>
+<li>将对应的 Tag 版本导出到本地</li>
+<li>执行 Maven 发布命令：mvn clean deploy</li>
+<li>执行 Maven 打包命令：mvn clean package</li>
+<li>获取打包结果</li>
+<li>编写产品说明文档</li>
+<li>提交到配置管理员</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tools/" rel="tag"># Tools</a>
+              <a href="/tags/Git/" rel="tag"># Git</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/itchatAndRedmine/" rel="prev" title="微信机器人和 Redmine 整合能做些什么？">
+                  <i class="fa fa-angle-left"></i> 微信机器人和 Redmine 整合能做些什么？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/GitKrakenTest/" rel="next" title="GitKraken">
+                  GitKraken <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

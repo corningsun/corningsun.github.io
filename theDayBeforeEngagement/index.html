@@ -1,37 +1,339 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="今天是 2017-01-22 日，明天就要订婚了，仅以此篇纪念我们重要的一个时刻。 过去初中我们是初中同学，而且仅仅只有一年。那时候流行“休学”，就是在初二多读一年，为了升初三的时候，没有压力，能考一个好点的高中。我休学到她的班级，然而初中并没有多少接触，那时候我刚到新的班级，又比较内向，除了座位周围的人，其他都不认识。然后第二年她也休学了，就这样错过了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="订婚的前一天">
+<meta property="og:url" content="https://corningsun.github.io/theDayBeforeEngagement/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="今天是 2017-01-22 日，明天就要订婚了，仅以此篇纪念我们重要的一个时刻。 过去初中我们是初中同学，而且仅仅只有一年。那时候流行“休学”，就是在初二多读一年，为了升初三的时候，没有压力，能考一个好点的高中。我休学到她的班级，然而初中并没有多少接触，那时候我刚到新的班级，又比较内向，除了座位周围的人，其他都不认识。然后第二年她也休学了，就这样错过了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-01-22T15:13:16.000Z">
+<meta property="article:modified_time" content="2017-02-13T12:05:24.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="杂文">
+<meta property="article:tag" content="狗粮">
+<meta name="twitter:card" content="summary">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/theDayBeforeEngagement/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/theDayBeforeEngagement/","path":"theDayBeforeEngagement/","title":"订婚的前一天"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>订婚的前一天 | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E5%8E%BB"><span class="nav-number">1.</span> <span class="nav-text">过去</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E4%B8%AD"><span class="nav-number">1.1.</span> <span class="nav-text">初中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E4%B8%AD"><span class="nav-number">1.2.</span> <span class="nav-text">高中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%AD%A6"><span class="nav-number">1.3.</span> <span class="nav-text">大学</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A0%94%E7%A9%B6%E7%94%9F"><span class="nav-number">1.4.</span> <span class="nav-text">研究生</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E5%9C%A8"><span class="nav-number">2.</span> <span class="nav-text">现在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E6%9D%A5"><span class="nav-number">3.</span> <span class="nav-text">将来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%88"><span class="nav-number">4.</span> <span class="nav-text">终</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/theDayBeforeEngagement/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="订婚的前一天 | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          订婚的前一天
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-01-22 23:13:16" itemprop="dateCreated datePublished" datetime="2017-01-22T23:13:16+08:00">2017-01-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2017-02-13 20:05:24" itemprop="dateModified" datetime="2017-02-13T20:05:24+08:00">2017-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">杂文</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E6%96%87/%E7%8B%97%E7%B2%AE/" itemprop="url" rel="index"><span itemprop="name">狗粮</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>今天是 <strong>2017-01-22</strong> 日，明天就要订婚了，仅以此篇纪念我们重要的一个时刻。</p>
+<h2 id="过去"><a href="#过去" class="headerlink" title="过去"></a>过去</h2><h3 id="初中"><a href="#初中" class="headerlink" title="初中"></a>初中</h3><p>我们是初中同学，而且仅仅只有一年。那时候流行“休学”，就是在初二多读一年，为了升初三的时候，没有压力，能考一个好点的高中。我休学到她的班级，然而初中并没有多少接触，那时候我刚到新的班级，又比较内向，除了座位周围的人，其他都不认识。然后第二年她也休学了，就这样错过了。  </p>
+<span id="more"></span>
+<h3 id="高中"><a href="#高中" class="headerlink" title="高中"></a>高中</h3><p>比较凑巧的是，高中我们是一个学校，是理科，而且都是 18 班，只是我比她高一个年级。高中的教室每年都会动一次，高一在一楼，高二在二楼，所以我一直在她楼上。高中第一次见面还是她跑到楼上来找我，她觉得我成绩很好，想请教些方法，问怎么学物理和数学。其实我很奇怪她怎么知道我在楼上的，而且当时我的成绩也就一般般，就没说啥了，只说了认真听课之类的吧，记不太清咯。高中也就这样过去了，除了偶尔在校园邂逅时，打个招呼，并没有其他交流。</p>
+<h3 id="大学"><a href="#大学" class="headerlink" title="大学"></a>大学</h3><p>大学我在工大，她在农大，不在一个城市，本来是一点交集都没有的。直到我大四，一个偶然的机会，初中的班长创建了 QQ 群，把我们都拉进去了。然后就互相加了好友，聊了起来，而且一发不可收拾；也许是太多年没见，也许是城市，专业都不一样，总之有太多可以聊的东西了。<br>那时候我已经在实习了，一个人在南京，空下来就找她聊天。有一次回学校，同宿舍的哥们让我给带点特产，我就顺便问下她要不要，她说要，然后我就真的给她送过去了。那时候才是高中后第一次见面，然后就正式成为我女朋友了～😄<br>她本来就比我低一个年级，然后高三的时候又复读了一年，所以那时候她才大二。有时候同学或者同事问起来，知道我女朋友才大二后，都会给个 “你真行😎” 的表情。但是我想说，我们真的是同学啊。。<br>我毕业后直接去了上海，那时候她才大四又准备考研，所以大部分时候都是我跑去合肥找她的。刚毕业，大家都懂的，没啥钱，只能一个月跑一次，有时候我出差或其他情况，时间会更久。住宾馆也要找尽量便宜的，基本都是一百以内；记得有一次周末，没有提前订房，最后找不到房间了，贵的又舍不得住，最后找了个 65 的，条件差的一 B，牙刷、毛巾、啥都没。虽然很苦，但是真的很开心  </p>
+<h3 id="研究生"><a href="#研究生" class="headerlink" title="研究生"></a>研究生</h3><p>比较幸运的是，她考研还算顺利，虽然纠结了好久，但是最后还是找了个离我最近的学校（苏州）。刚到苏州的时候，真的好开心啊，觉得离得这么近了，而且车费也便宜了好多，可以经常见面了。<br>上海到苏州高铁比普快贵一倍多，但是时间其实相差不多，所以经常我们都是做普快来回。刚开始还是我去苏州找她，后来她就不让我去了，说在苏州要住宾馆，要多花好多钱。所以虽然她在苏州待了很久，但是到最后，我去的次数一只手都数得过来。有好多地方，她说一直要带去我看的，到后来的后来，我才终于看到了～～<br>因为专业原因，她实习的比较早，实习的机会其实挺多的，但最后还是选择了“上海”，离我更近了。不过上海实在太大了，我在浦西、她在浦东，过来一趟还是要两个小时。她们实习也很辛苦，每天都得晚上 10 点多才回宿舍，然后周六还得加班。不过她一有空就会过来陪我，然后我们一起睡懒觉，一起加餐，一起包饺子，一起逛街。<br>我有时候让她周末别过来了，在宿舍好好休息，但是她会生气，说我嫌弃她，说，在我这就能不动脑子，就能好好放松。</p>
+<h2 id="现在"><a href="#现在" class="headerlink" title="现在"></a>现在</h2><p>订婚的日子其实定了很久了，但是因为上班，也才回来两天，匆匆忙忙的，跟爸妈一起才总算把东西都差不多准备好了。<br>家里的事情真的好多好多，多到心里烦躁，晚上收拾屋子，怎么都收拾不完，干脆放弃了  </p>
+<h2 id="将来"><a href="#将来" class="headerlink" title="将来"></a>将来</h2><p>过日子真的不容易，所以我的签名会是“** 家家有本难念的经 **”，希望将来也像现在一样，开开心心，一切安好～</p>
+<h2 id="终"><a href="#终" class="headerlink" title="终"></a>终</h2><p>现在是 <strong>2017-01-23 00:52:16</strong>，农历 ** 腊月二十六 **，已经是我订婚的日子啦。<br>不知不觉，写的有点多，早点睡了，安～  </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%82%E6%96%87/" rel="tag"># 杂文</a>
+              <a href="/tags/%E7%8B%97%E7%B2%AE/" rel="tag"># 狗粮</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/iphoneCertsSetting/" rel="prev" title="iPhone 手机证书安装说明">
+                  <i class="fa fa-angle-left"></i> iPhone 手机证书安装说明
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/SonarQubeFilters/" rel="next" title="SonarQube 过滤器使用说明">
+                  SonarQube 过滤器使用说明 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

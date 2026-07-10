@@ -1,37 +1,369 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="欢迎转载，原文链接：https:&#x2F;&#x2F;corningsun.github.io&#x2F;My2021  我的 20211 月 2 月怀上了😁，疫情原因没有回老家，过了二人春节，没事就散散步。  3 月堂妹嫁人了，祝她幸福  4 月去东海挖蛤蜊和螃蟹  很冷，但还是起来看日出了  给好哥们践行，黄酒虽好，莫贪杯  5 月小石头已经这么大了  6 月带媳妇去爸妈船上一日游，给大家看下船上怎么实现绿色蔬菜自给">
+<meta property="og:type" content="article">
+<meta property="og:title" content="My2021">
+<meta property="og:url" content="https://corningsun.github.io/My2021/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="欢迎转载，原文链接：https:&#x2F;&#x2F;corningsun.github.io&#x2F;My2021  我的 20211 月 2 月怀上了😁，疫情原因没有回老家，过了二人春节，没事就散散步。  3 月堂妹嫁人了，祝她幸福  4 月去东海挖蛤蜊和螃蟹  很冷，但还是起来看日出了  给好哥们践行，黄酒虽好，莫贪杯  5 月小石头已经这么大了  6 月带媳妇去爸妈船上一日游，给大家看下船上怎么实现绿色蔬菜自给">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/MAoMSA7.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/REhAAEF.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/g3Uc9nZ.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/eX2CyD6.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/ibkVloY.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/cu2gImb.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/GpGHwmZ.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/lSIHSA4.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/2EtlFYP.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/28y4ZaV.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/dKVjCMB.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/k8tplgi.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/WsHjELb.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/tZ6Y0PX.jpg">
+<meta property="article:published_time" content="2021-12-31T03:34:46.000Z">
+<meta property="article:modified_time" content="2026-07-10T06:45:11.746Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="2021">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/MAoMSA7.jpg">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/My2021/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/My2021/","path":"My2021/","title":"My2021"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>My2021 | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E7%9A%84-2021"><span class="nav-number">1.</span> <span class="nav-text">我的 2021</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%9C%88-2-%E6%9C%88"><span class="nav-number">1.1.</span> <span class="nav-text">1 月 2 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%9C%88"><span class="nav-number">1.2.</span> <span class="nav-text">3 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9C%88"><span class="nav-number">1.3.</span> <span class="nav-text">4 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%9C%88"><span class="nav-number">1.4.</span> <span class="nav-text">5 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%9C%88"><span class="nav-number">1.5.</span> <span class="nav-text">6 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%9C%88"><span class="nav-number">1.6.</span> <span class="nav-text">7 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%9C%88"><span class="nav-number">1.7.</span> <span class="nav-text">8 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%9C%88"><span class="nav-number">1.8.</span> <span class="nav-text">9 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-%E6%9C%88"><span class="nav-number">1.9.</span> <span class="nav-text">10 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-%E6%9C%88"><span class="nav-number">1.10.</span> <span class="nav-text">11 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-%E6%9C%88"><span class="nav-number">1.11.</span> <span class="nav-text">12 月</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%B9%B4%E6%84%BF%E6%9C%9B"><span class="nav-number">1.12.</span> <span class="nav-text">新年愿望</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/My2021/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="My2021 | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          My2021
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-31 11:34:46" itemprop="dateCreated datePublished" datetime="2021-12-31T11:34:46+08:00">2021-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-10 14:45:11" itemprop="dateModified" datetime="2026-07-10T14:45:11+08:00">2026-07-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>欢迎转载，原文链接：<a href="https://corningsun.github.io/My2021">https://corningsun.github.io/My2021</a></p>
+</blockquote>
+<h1 id="我的-2021"><a href="#我的-2021" class="headerlink" title="我的 2021"></a>我的 2021</h1><h2 id="1-月-2-月"><a href="#1-月-2-月" class="headerlink" title="1 月 2 月"></a>1 月 2 月</h2><p>怀上了😁，疫情原因没有回老家，过了二人春节，没事就散散步。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/MAoMSA7.jpg"></p>
+<h2 id="3-月"><a href="#3-月" class="headerlink" title="3 月"></a>3 月</h2><p>堂妹嫁人了，祝她幸福</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/REhAAEF.jpg"></p>
+<h2 id="4-月"><a href="#4-月" class="headerlink" title="4 月"></a>4 月</h2><p>去东海挖蛤蜊和螃蟹</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/g3Uc9nZ.jpg"></p>
+<p>很冷，但还是起来看日出了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/eX2CyD6.jpg"></p>
+<p>给好哥们践行，黄酒虽好，莫贪杯</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/ibkVloY.jpg"></p>
+<h2 id="5-月"><a href="#5-月" class="headerlink" title="5 月"></a>5 月</h2><p>小石头已经这么大了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/cu2gImb.jpg"></p>
+<h2 id="6-月"><a href="#6-月" class="headerlink" title="6 月"></a>6 月</h2><p>带媳妇去爸妈船上一日游，给大家看下船上怎么实现绿色蔬菜自给，顺便还带了两盆小花回家。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/GpGHwmZ.jpg"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/lSIHSA4.jpg"></p>
+<h2 id="7-月"><a href="#7-月" class="headerlink" title="7 月"></a>7 月</h2><p>准备好待产包，着实难为他爹妈了，但是准备好后心定了很多。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/2EtlFYP.jpg"></p>
+<h2 id="8-月"><a href="#8-月" class="headerlink" title="8 月"></a>8 月</h2><p>开始帮朋友干活，挣点零花钱。</p>
+<h2 id="9-月"><a href="#9-月" class="headerlink" title="9 月"></a>9 月</h2><p>组装好宝宝床，顺利迎接小石头来到新家。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/28y4ZaV.jpg"></p>
+<h2 id="10-月"><a href="#10-月" class="headerlink" title="10 月"></a>10 月</h2><p>国庆节做了半飞秒，有点贵，但是摘掉了眼镜真的爽啊。</p>
+<p>公司团建，皮划艇真好玩，就是有点冷，最后被暴风雨拍上岸 😭。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/dKVjCMB.jpg"></p>
+<p>给 2015 MBP 更新了电池，满血复活</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/k8tplgi.jpg"></p>
+<h2 id="11-月"><a href="#11-月" class="headerlink" title="11 月"></a>11 月</h2><p>南京一夜游，感谢姐姐姐夫的招待</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/WsHjELb.jpg"></p>
+<h2 id="12-月"><a href="#12-月" class="headerlink" title="12 月"></a>12 月</h2><p>第一次参加义务献血，终于知道自己是 O 型血，采血的管子是真的粗。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/tZ6Y0PX.jpg"></p>
+<p>做了 “吻合钉吻合手术”，是真的疼！</p>
+<h2 id="新年愿望"><a href="#新年愿望" class="headerlink" title="新年愿望"></a>新年愿望</h2><ul>
+<li>小石头健康快乐发育，给他妈省点心</li>
+<li>老婆头发粗壮乌黑发亮</li>
+<li>拍中沪牌</li>
+<li>要是年会能抽个 Switch 就好咯 😄</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/2021/" rel="tag"># 2021</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/IntelliJIDEA%E6%8F%92%E4%BB%B6HTTPClient/" rel="prev" title="IntelliJIDEA 插件 HTTPClient">
+                  <i class="fa fa-angle-left"></i> IntelliJIDEA 插件 HTTPClient
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E5%A5%97%E8%B7%AF/" rel="next" title="恋爱套路">
+                  恋爱套路 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

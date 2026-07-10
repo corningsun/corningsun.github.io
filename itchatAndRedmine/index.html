@@ -1,37 +1,427 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="概述公司使用 Redmine 作为项目管理工具，同时使用微信群进行工作交流。日常管理中会有一些需求，但是需要打通微信和 Redmine 之间数据交互才能完成。下面我来介绍下，目前已经完成的功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信机器人和 Redmine 整合能做些什么？">
+<meta property="og:url" content="https://corningsun.github.io/itchatAndRedmine/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="概述公司使用 Redmine 作为项目管理工具，同时使用微信群进行工作交流。日常管理中会有一些需求，但是需要打通微信和 Redmine 之间数据交互才能完成。下面我来介绍下，目前已经完成的功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-01-121940.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-02-013227.jpg-o">
+<meta property="og:image" content="http://corningsun.qiniudn.com/blog/2017-03-01-125939.jpg-o">
+<meta property="article:published_time" content="2017-03-01T08:15:36.000Z">
+<meta property="article:modified_time" content="2017-03-02T01:33:36.000Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="itChat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://corningsun.qiniudn.com/blog/2017-03-01-121940.jpg-o">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/itchatAndRedmine/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/itchatAndRedmine/","path":"itchatAndRedmine/","title":"微信机器人和 Redmine 整合能做些什么？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>微信机器人和 Redmine 整合能做些什么？ | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83"><span class="nav-number">1.1.</span> <span class="nav-text">依赖环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E5%90%88%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="nav-number">1.2.</span> <span class="nav-text">整合的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E7%BE%A4%E6%AF%8F%E5%A4%A9%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B1%87%E6%8A%A5%E6%A3%80%E6%9F%A5"><span class="nav-number">1.2.1.</span> <span class="nav-text">微信群每天的工作汇报检查</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E6%B1%87%E6%80%BB%E5%88%B0-Redmine"><span class="nav-number">1.2.2.</span> <span class="nav-text">微信聊天记录汇总到 Redmine</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-1"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%A6%E6%9D%9F"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">约束</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redmine-%E6%9C%AA%E5%AE%8C%E6%88%90%E5%B7%A5%E4%BD%9C%E6%8F%90%E9%86%92"><span class="nav-number">1.2.3.</span> <span class="nav-text">Redmine 未完成工作提醒</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-2"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redmine-%E5%B7%A5%E6%97%B6%E6%9C%AA%E5%A1%AB%E5%86%99%E6%8F%90%E9%86%92"><span class="nav-number">1.2.4.</span> <span class="nav-text">Redmine 工时未填写提醒</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84-3"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%88%E6%9E%9C"><span class="nav-number">1.2.4.3.</span> <span class="nav-text">效果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">1.3.</span> <span class="nav-text">结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FAQ"><span class="nav-number">1.4.</span> <span class="nav-text">FAQ</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-pip-install-peewee-%E5%87%BA%E7%8E%B0%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98%EF%BC%8C%E6%97%A0%E6%B3%95%E5%AE%89%E8%A3%85"><span class="nav-number">1.4.1.</span> <span class="nav-text">使用 pip install peewee 出现权限问题，无法安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E7%BE%A4%E6%98%AF%E4%B8%AD%E6%96%87%E5%90%8D%E6%97%B6%EF%BC%8C%E8%B0%83%E7%94%A8-itchat-search-chatrooms-name-%E4%B8%AD%E6%96%87-%E4%BC%9A%E6%8A%A5%E9%94%99"><span class="nav-number">1.4.2.</span> <span class="nav-text">微信群是中文名时，调用 itchat.search_chatrooms(name&#x3D;&#39;中文&#39;) 会报错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redmine-%E4%B8%AD%E6%A0%B9%E6%8D%AE%E5%A7%93%E5%90%8D%E6%9F%A5%E8%AF%A2%E7%94%A8%E6%88%B7%E6%97%B6%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%A0%B9%E6%8D%AE%E5%A7%93%E5%90%8D%E5%85%A8%E7%A7%B0%E6%9F%A5%E8%AF%A2%EF%BC%8C%E4%BD%86%E6%98%AF%E5%A7%93%E5%92%8C%E5%90%8D%E4%B9%8B%E9%97%B4%E8%A6%81%E6%9C%89%E7%A9%BA%E6%A0%BC"><span class="nav-number">1.4.3.</span> <span class="nav-text">Redmine 中根据姓名查询用户时，可以根据姓名全称查询，但是姓和名之间要有空格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#itChat-%E4%B8%AD%E7%9A%84-UserName%E3%80%81DisplayName-%E5%92%8C-NickName-%E5%85%B7%E4%BD%93%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.4.4.</span> <span class="nav-text">itChat 中的 UserName、DisplayName 和 NickName 具体是什么？</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/itchatAndRedmine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="微信机器人和 Redmine 整合能做些什么？ | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微信机器人和 Redmine 整合能做些什么？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-03-01 16:15:36" itemprop="dateCreated datePublished" datetime="2017-03-01T16:15:36+08:00">2017-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2017-03-02 09:33:36" itemprop="dateModified" datetime="2017-03-02T09:33:36+08:00">2017-03-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Python/itChat/" itemprop="url" rel="index"><span itemprop="name">itChat</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>公司使用 Redmine 作为项目管理工具，同时使用微信群进行工作交流。日常管理中会有一些需求，但是需要打通微信和 Redmine 之间数据交互才能完成。下面我来介绍下，目前已经完成的功能。</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-03-01-121940.jpg-o"></p>
+<span id="more"></span>
+
+<h2 id="依赖环境"><a href="#依赖环境" class="headerlink" title="依赖环境"></a>依赖环境</h2><ul>
+<li><p><a href="http://www.redmine.org/" title="http:&#x2F;&#x2F;www.redmine.org&#x2F;">Redmine</a>  </p>
+<blockquote>
+<p>是一个网页界面的项目管理与缺陷跟踪管理系统的自由及开放源代码软件工具。它集成了项目管理所需的各项功能：日历、燃尽图和甘特图 以协助可视化表现项目与时间限制，问题跟踪和版本控制。此外，Redmine 也可以同时处理多个项目。</p>
+</blockquote>
+</li>
+<li><p><a href="https://www.python.org/" title="https:&#x2F;&#x2F;www.python.org&#x2F;">Python</a> </p>
+</li>
+<li><p><a href="https://github.com/littlecodersh/ItChat" title="https:&#x2F;&#x2F;github.com&#x2F;littlecodersh&#x2F;ItChat">itChat</a>  </p>
+<blockquote>
+<p>是一个开源的微信个人号接口，使用 python 调用微信从未如此简单。</p>
+</blockquote>
+</li>
+<li><p><a href="http://python-redmine.readthedocs.io/index.html" title="http:&#x2F;&#x2F;python-redmine.readthedocs.io&#x2F;index.html">python-redmine</a>  </p>
+<blockquote>
+<p>is a library for communicating with a Redmine project management application.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="整合的功能"><a href="#整合的功能" class="headerlink" title="整合的功能"></a>整合的功能</h2><h3 id="微信群每天的工作汇报检查"><a href="#微信群每天的工作汇报检查" class="headerlink" title="微信群每天的工作汇报检查"></a>微信群每天的工作汇报检查</h3><h4 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h4><p>部门有一个微信群，要求每个员工在工作日 9:00 之前汇报自己当天的任务安排。而且汇报任务时，必须 @自己的领导。由于人数较多，检查谁没有发送会比较困难，所以想通过机器人来解决。</p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>使用 itchat 的消息监听，获取部门微信群的聊天记录</li>
+<li>使用 <a href="http://docs.peewee-orm.com/en/latest/">peewee</a> 将聊天记录存储到数据库中</li>
+<li>使用 <a href="https://pypi.python.org/pypi/schedule">schedule</a> 运行启动线程，每天 10:00 运行</li>
+<li>从数据库查询当天 0:00～10:00 的微信群聊天记录，包含 <code>@</code> 并以组员分组，得到当天 ** 已汇报的人员列表 **</li>
+<li>使用 <code>itchat.search_chatrooms()</code> 获取部门群</li>
+<li>从部门群获取所有成员	<code>MemberList = rooms[0].get(&#39;MemberList&#39;)</code></li>
+<li>分别判断组员是否在 ** 已汇报人员列表 ** 中，不在的，记录到 ** 未汇报结果 ** 中</li>
+<li>将 ** 未汇报结果 ** 发送给指定人员或微信群</li>
+</ol>
+<h3 id="微信聊天记录汇总到-Redmine"><a href="#微信聊天记录汇总到-Redmine" class="headerlink" title="微信聊天记录汇总到 Redmine"></a>微信聊天记录汇总到 Redmine</h3><h4 id="目的-1"><a href="#目的-1" class="headerlink" title="目的"></a>目的</h4><p>每个项目都会有一个或多个对应的微信群，这些微信群中的聊天记录很多都是有价值的，需要保留的。但是现在的微信群是无法长时间保存历史信息的。同时，每个项目在 Redmine 中都会有对应的 <strong>Issue</strong>，如果能将微信群和 <strong>Issue</strong> 对应起来，那么对于后续项目推进，项目背景了解，定制开发等都会有很大帮助。</p>
+<h4 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h4><ul>
+<li>微信群名称风格要统一，如：群名称 #<strong>issueId</strong>, 测试群 #1234</li>
+</ul>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>保存微信群聊天记录到数据库（和上面一样不再累述）</li>
+<li>每天 23 点，从数据库查询当天的所有聊天记录，并以微信群名称分组</li>
+<li>分别汇总每个微信群的聊天记录（注意按时间排序）</li>
+<li>从群名称中获取 <strong>issueId</strong></li>
+<li>使用 <code>redmine.issue.update</code> 将聊天记录更新到对应的 <strong>Issue</strong></li>
+</ol>
+<h3 id="Redmine-未完成工作提醒"><a href="#Redmine-未完成工作提醒" class="headerlink" title="Redmine 未完成工作提醒"></a>Redmine 未完成工作提醒</h3><h4 id="目的-2"><a href="#目的-2" class="headerlink" title="目的"></a>目的</h4><p>Redmine 中每个人都被分派了很多任务，时间久了，会忘记这些任务，导致有些任务没有执行或者执行后没有关闭。</p>
+<h4 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>从微信群获取所有组员</li>
+<li>根据组员姓名到 Redmine 查询组员在 Redmine 中的唯一 ID（<code>redmine.user.filter</code>）</li>
+<li>根据组员 Id 到 Redmine 查询未完成的 issues（<code>redmine.issue.filter</code>）</li>
+<li>合并所有待完成的任务信息</li>
+<li>使用微信发送任务给指定组员</li>
+</ol>
+<h3 id="Redmine-工时未填写提醒"><a href="#Redmine-工时未填写提醒" class="headerlink" title="Redmine 工时未填写提醒"></a>Redmine 工时未填写提醒</h3><h4 id="目的-3"><a href="#目的-3" class="headerlink" title="目的"></a>目的</h4><p>公司要求所有员工，在每天下班之前，填写好自己的工作日志。但是因为各种情况，出差、加班、忘记了等会导致日志填写不准确。</p>
+<h4 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>从微信群获取所有组员，并根据组员姓名获取在 Redmine 的 Id</li>
+<li>获取待检查的日期，可以设定为最近 7 天，内的工作日</li>
+<li>使用 <code>redmine.time_entry.filter</code> 查询每个员工在指定日期的工作日志</li>
+<li>判断一天内的工时总数是否 <code>&gt; 7.5</code>，不满足则记录到检查结果中</li>
+<li>汇总所有员工的检查结果</li>
+<li>发送检查结果到微信群</li>
+</ol>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p><img src="http://corningsun.qiniudn.com/blog/2017-03-02-013227.jpg-o"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>其实这些功能的实现并没有很高的技术含量，我做的不过是写写代码。很佩服我的 <strong>leader</strong> 能想到可以这么去做。</p>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><p>记录一些我觉得容易出错问题吧，如果能帮到你们，那最好了。</p>
+<h3 id="使用-pip-install-peewee-出现权限问题，无法安装"><a href="#使用-pip-install-peewee-出现权限问题，无法安装" class="headerlink" title="使用 pip install peewee 出现权限问题，无法安装"></a>使用 <code>pip install peewee</code> 出现权限问题，无法安装</h3><p>我的开发环境是 <strong>Mac</strong>，系统有默认的 Python 环境。出现上述问题后，我使用 <code>sudo pip install peewee</code>，可以安装。但是后续运行脚本时，提示无法找到 <code>peewee</code> 模块。<br>后面我查了一下，大家推荐的方式是，安装<a href="http://docs.python-guide.org/en/latest/dev/virtualenvs/">virtualenvs</a>。<a href="http://www.jianshu.com/p/08c657bd34f1" title="Virtualenv 简明教程">英语不好的点这里</a><br>再啰嗦一句，退出虚拟环境后，再次进入的方法是：  <code>source / 你的虚拟环境目录 / bin/activate</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MacBook-Pro:Documents corning$ source ~/pyvirs/wxrobot/bin/activate</span><br><span class="line">(wxrobot) MacBook-Pro:Documents corning$</span><br></pre></td></tr></table></figure>
+
+<h3 id="微信群是中文名时，调用-itchat-search-chatrooms-name-中文-会报错"><a href="#微信群是中文名时，调用-itchat-search-chatrooms-name-中文-会报错" class="headerlink" title="微信群是中文名时，调用 itchat.search_chatrooms(name=&#39;中文&#39;) 会报错"></a>微信群是中文名时，调用 <code>itchat.search_chatrooms(name=&#39;中文&#39;)</code> 会报错</h3><p>解决方法是，转换中文名为 <code>unicode</code> 编码，如：<code>itchat.search_chatrooms(name=u&#39;中文&#39;)</code></p>
+<h3 id="Redmine-中根据姓名查询用户时，可以根据姓名全称查询，但是姓和名之间要有空格"><a href="#Redmine-中根据姓名查询用户时，可以根据姓名全称查询，但是姓和名之间要有空格" class="headerlink" title="Redmine 中根据姓名查询用户时，可以根据姓名全称查询，但是姓和名之间要有空格"></a>Redmine 中根据姓名查询用户时，可以根据姓名全称查询，但是姓和名之间要有空格</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">u&#x27; 张三丰 &#x27;</span></span><br><span class="line">filterName = name[<span class="number">0</span>] + <span class="string">&quot; &quot;</span> + name[<span class="number">1</span>:<span class="built_in">len</span>(name)]</span><br><span class="line">users = redmine.user.<span class="built_in">filter</span>(name=filterName, status=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>下面是官方文档的参数说明，怪我看的不仔细😢
+	</p>
+<blockquote>
+<p>name (string) – (optional). Filter users on their login, firstname, lastname and mail. <strong>If the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.</strong></p>
+</blockquote>
+<h3 id="itChat-中的-UserName、DisplayName-和-NickName-具体是什么？"><a href="#itChat-中的-UserName、DisplayName-和-NickName-具体是什么？" class="headerlink" title="itChat 中的 UserName、DisplayName 和 NickName 具体是什么？"></a><code>itChat</code> 中的 <code>UserName</code>、<code>DisplayName</code> 和 <code>NickName</code> 具体是什么？</h3><ul>
+<li><p>UserName </p>
+<blockquote>
+<p>用户或微信群在微信中的唯一 ID，可以通过次 Id 发送消息等<br>一般如：@@absdeeddvvvffss</p>
+</blockquote>
+</li>
+<li><p>DisplayName</p>
+<blockquote>
+<p>微信显示的名称</p>
+</blockquote>
+</li>
+<li><p>NickName</p>
+<blockquote>
+<p>群昵称</p>
+</blockquote>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-01-125939.jpg-o"></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/itChat/" rel="tag"># itChat</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/SonarQubeFilters/" rel="prev" title="SonarQube 过滤器使用说明">
+                  <i class="fa fa-angle-left"></i> SonarQube 过滤器使用说明
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/eclipseGitFlowNightly/" rel="next" title="Eclipse 插件 Gitflow Nightly">
+                  Eclipse 插件 Gitflow Nightly <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

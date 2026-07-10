@@ -11,5 +11,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: https://corningsun.com/sitemap.xml
-Sitemap: https://corningsun.com/baidusitemap.xml
+Sitemap: https://corningsun.github.io/sitemap.xml
+Sitemap: https://corningsun.github.io/baidusitemap.xml

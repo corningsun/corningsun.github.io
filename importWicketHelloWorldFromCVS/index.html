@@ -1,37 +1,412 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-{% block page_class %}page-post-detail{% endblock %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.28.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="目的 学习从 CVS 中导出项目 学习 Wicket 基本结构  例子来源Wicket User Guide - 2 How to use the example code">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 CVS 中导出 WicketHelloWorld">
+<meta property="og:url" content="https://corningsun.github.io/importWicketHelloWorldFromCVS/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="目的 学习从 CVS 中导出项目 学习 Wicket 基本结构  例子来源Wicket User Guide - 2 How to use the example code">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/VdT4ni0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/xjEIMFJ.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/0ZuURWm.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/WGupso5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/MAtXU8F.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/uKWmi5I.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/bIlQpE7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/nFYvytF.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/V6adhwi.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/wCcEhAf.png">
+<meta property="article:published_time" content="2015-03-19T01:54:38.000Z">
+<meta property="article:modified_time" content="2023-06-20T02:15:12.299Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Wicket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/VdT4ni0.png">
 
 
-{% block content %}
+<link rel="canonical" href="https://corningsun.github.io/importWicketHelloWorldFromCVS/">
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/importWicketHelloWorldFromCVS/","path":"importWicketHelloWorldFromCVS/","title":"从 CVS 中导出 WicketHelloWorld"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从 CVS 中导出 WicketHelloWorld | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
   </div>
 
-{% endblock %}
+  <div class="site-meta">
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E6%9D%A5%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">例子来源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8B-CVS-%E8%B5%84%E6%BA%90%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">建立 CVS 资源库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E-CVS-%E4%B8%AD-Checkout"><span class="nav-number">5.</span> <span class="nav-text">从 CVS 中 Checkout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BD%AC%E6%8D%A2%E4%B8%BA-Maven-%E9%A1%B9%E7%9B%AE"><span class="nav-number">6.</span> <span class="nav-text">转换为 Maven 项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE"><span class="nav-number">7.</span> <span class="nav-text">启动项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="nav-number">8.</span> <span class="nav-text">代码结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web-xml"><span class="nav-number">8.1.</span> <span class="nav-text">web.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WicketApplication-java"><span class="nav-number">8.2.</span> <span class="nav-text">WicketApplication.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HomePage-java"><span class="nav-number">8.3.</span> <span class="nav-text">HomePage.java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HomePage-html"><span class="nav-number">8.4.</span> <span class="nav-text">HomePage.html</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/importWicketHelloWorldFromCVS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从 CVS 中导出 WicketHelloWorld | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从 CVS 中导出 WicketHelloWorld
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-03-19 09:54:38" itemprop="dateCreated datePublished" datetime="2015-03-19T09:54:38+08:00">2015-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-06-20 10:15:12" itemprop="dateModified" datetime="2023-06-20T10:15:12+08:00">2023-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/Wicket/" itemprop="url" rel="index"><span itemprop="name">Wicket</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><ul>
+<li>学习从 CVS 中导出项目</li>
+<li>学习 Wicket 基本结构</li>
+</ul>
+<h2 id="例子来源"><a href="#例子来源" class="headerlink" title="例子来源"></a>例子来源</h2><p><a href="http://wicket.apache.org/guide/guide/howToSource.html" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;guide&#x2F;guide&#x2F;howToSource.html">Wicket User Guide - 2 How to use the example code</a></p>
+<span id="more"></span>
+
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><ul>
+<li>Eclipse</li>
+<li>Eclipse 插件 - CVS</li>
+<li>Eclipse 插件 - Maven</li>
+<li>Eclipse 插件 - Tomcat</li>
+</ul>
+<p>为方便部署，我下载了一个 JEE 版本的 Eclipse，包含所有插件</p>
+<p><code>\\192.168.40.90\Tools\eclipse\eclipse-jee-luna-SR1-win32-x86_64.zip</code></p>
+<p>Tomcat</p>
+<p><code>\\192.168.40.90\Tools\Tomcat</code></p>
+<p>Maven</p>
+<p><code>\\192.168.40.90\Tools\apache-maven-3.1.0</code></p>
+<h2 id="建立-CVS-资源库"><a href="#建立-CVS-资源库" class="headerlink" title="建立 CVS 资源库"></a>建立 CVS 资源库</h2><blockquote>
+<p>:pserver:<a href="mailto:&#x79;&#111;&#x75;&#114;&#x4e;&#97;&#109;&#x65;&#x40;&#x31;&#57;&#x32;&#x2e;&#49;&#54;&#x38;&#x2e;&#49;&#x2e;&#49;&#x38;&#50;">yourName@192.168.1.182</a>:&#x2F;depcvs&#x2F;platform_training<br>platform_training&#x2F;demo&#x2F;wicket&#x2F;HelloWorldExample</p>
+</blockquote>
+<p>在 CVS 中添加资源库方法请参考：<a href="http://corningsun.gitcafe.io/2015/03/17/WCL%E5%85%A5%E9%97%A8/">WCL 入门</a></p>
+<h2 id="从-CVS-中-Checkout"><a href="#从-CVS-中-Checkout" class="headerlink" title="从 CVS 中 Checkout"></a>从 CVS 中 Checkout</h2><ul>
+<li>在 CVS 资源库中找到项目目录后，右键，选择 <code>Check Out As...</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/VdT4ni0.png"></p>
+<ul>
+<li>选择 <code>Check out as a project in the workspace</code>，点击 <code>Finish</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/xjEIMFJ.png"></p>
+<ul>
+<li>此时项目已经导出到 Eclipse 的工作目录了</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/0ZuURWm.png"></p>
+<h2 id="转换为-Maven-项目"><a href="#转换为-Maven-项目" class="headerlink" title="转换为 Maven 项目"></a>转换为 Maven 项目</h2><p>如果在项目的根目录发现有 <code>pom.xml</code> 文件的话，那就表示此项目是支持 Maven 构建的。</p>
+<ul>
+<li>右键，找到 <code>Configure</code> 选项，选择 <code>Convert to Maven Project</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/WGupso5.png"></p>
+<ul>
+<li>运行结束后代码目录如下</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/MAtXU8F.png"></p>
+<ul>
+<li>如果转换为 Maven 后报错，可以试试如下方法</li>
+</ul>
+<p>右键，<code>Maven</code>，选择 <code>Update Project</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/uKWmi5I.png"></p>
+<h2 id="启动项目"><a href="#启动项目" class="headerlink" title="启动项目"></a>启动项目</h2><ul>
+<li>右键 <code>Run As</code> 选择 <code>Run on Server</code></li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/bIlQpE7.png"></p>
+<ul>
+<li>选择一个 tomcat Server, 如果没有的话，需要新建一个</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/nFYvytF.png"></p>
+<ul>
+<li>点击 <code>Finish</code> 后，访问 <code>http://localhost:8080/HelloWorldExample/</code>，效果如下</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/V6adhwi.png"></p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/wCcEhAf.png"></p>
+<h3 id="web-xml"><a href="#web-xml" class="headerlink" title="web.xml"></a>web.xml</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;</span><br><span class="line">	version=&quot;2.5&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;display-name&gt;HelloWorldExample&lt;/display-name&gt;</span><br><span class="line"></span><br><span class="line">	&lt;filter&gt;</span><br><span class="line">		&lt;filter-name&gt;wicket.HelloWorldExample&lt;/filter-name&gt;</span><br><span class="line">		&lt;filter-class&gt;org.apache.wicket.protocol.http.WicketFilter&lt;/filter-class&gt;</span><br><span class="line">		&lt;init-param&gt;</span><br><span class="line">			&lt;param-name&gt;applicationClassName&lt;/param-name&gt;</span><br><span class="line">			&lt;param-value&gt;org.wicketTutorial.WicketApplication&lt;/param-value&gt;</span><br><span class="line">		&lt;/init-param&gt;</span><br><span class="line">	&lt;/filter&gt;</span><br><span class="line"></span><br><span class="line">	&lt;filter-mapping&gt;</span><br><span class="line">		&lt;filter-name&gt;wicket.HelloWorldExample&lt;/filter-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">	&lt;/filter-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="WicketApplication-java"><a href="#WicketApplication-java" class="headerlink" title="WicketApplication.java"></a>WicketApplication.java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.wicketTutorial;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.wicket.markup.html.WebPage;</span><br><span class="line"><span class="keyword">import</span> org.apache.wicket.protocol.http.WebApplication;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WicketApplication</span> <span class="keyword">extends</span> <span class="title class_">WebApplication</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> Class&lt;? <span class="keyword">extends</span> <span class="title class_">WebPage</span>&gt; getHomePage() &#123;</span><br><span class="line">		<span class="keyword">return</span> HomePage.class;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="built_in">super</span>.init();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// add your configuration here</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="HomePage-java"><a href="#HomePage-java" class="headerlink" title="HomePage.java"></a>HomePage.java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.wicketTutorial;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.wicket.markup.html.WebPage;</span><br><span class="line"><span class="keyword">import</span> org.apache.wicket.markup.html.basic.Label;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HomePage</span> <span class="keyword">extends</span> <span class="title class_">WebPage</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">HomePage</span><span class="params">()</span> &#123;</span><br><span class="line">		add(<span class="keyword">new</span> <span class="title class_">Label</span>(<span class="string">&quot;helloMessage&quot;</span>, <span class="string">&quot;Hello WicketWorld!&quot;</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="HomePage-html"><a href="#HomePage-html" class="headerlink" title="HomePage.html"></a>HomePage.html</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html xmlns:wicket=&quot;http://wicket.apache.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;utf-8&quot; /&gt;</span><br><span class="line">&lt;title&gt;&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">	&lt;h1 wicket:id=&quot;helloMessage&quot;&gt;&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Wicket/" rel="tag"># Wicket</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/MarkDownPad-Pro-experience/" rel="prev" title="MarkDownPad Pro 体验">
+                  <i class="fa fa-angle-left"></i> MarkDownPad Pro 体验
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/JavaWebServletBasic/" rel="next" title="Java Web Servlet Basic">
+                  Java Web Servlet Basic <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
