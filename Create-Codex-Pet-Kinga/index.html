@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"corningsun.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="欢迎转载，原文链接：https:&#x2F;&#x2F;corningsun.github.io&#x2F;Create-Codex-Pet-Kinga&#x2F;  最近我用一张婚纱照，在 Codex 里生成了一个叫 kinga 的宠物。这里的 “宠物” 并不是一张静态头像，而是一套会跟着 Codex 工作状态变化的动画角色：空闲时会呼吸和眨眼，工作时会进入专注状态，需要我确认时会等待，任务失败时也会露出沮丧的表情。 这是最终的待机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程">
+<meta property="og:url" content="https://corningsun.github.io/Create-Codex-Pet-Kinga/index.html">
+<meta property="og:site_name" content="Corning Sun&#39;s Blog">
+<meta property="og:description" content="欢迎转载，原文链接：https:&#x2F;&#x2F;corningsun.github.io&#x2F;Create-Codex-Pet-Kinga&#x2F;  最近我用一张婚纱照，在 Codex 里生成了一个叫 kinga 的宠物。这里的 “宠物” 并不是一张静态头像，而是一套会跟着 Codex 工作状态变化的动画角色：空闲时会呼吸和眨眼，工作时会进入专注状态，需要我确认时会等待，任务失败时也会露出沮丧的表情。 这是最终的待机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-idle.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-waving.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-jumping.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-running-right.gif">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-look-directions.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-review.gif">
+<meta property="article:published_time" content="2026-09-04T09:55:00.000Z">
+<meta property="article:modified_time" content="2026-09-04T09:54:06.242Z">
+<meta property="article:author" content="Corning Sun">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Codex">
+<meta property="article:tag" content="Image Generation">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-idle.gif">
+
+
+<link rel="canonical" href="https://corningsun.github.io/Create-Codex-Pet-Kinga/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://corningsun.github.io/Create-Codex-Pet-Kinga/","path":"Create-Codex-Pet-Kinga/","title":"把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程 | Corning Sun's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Corning Sun's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Corning Sun's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Where's my sunshine...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-love"><a href="/love/" rel="section"><i class="heart fa-fw"></i>love</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Codex-%E5%AE%A0%E7%89%A9%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">Codex 宠物是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%88%91%E6%8F%90%E4%BE%9B%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">我提供了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%B9%B6%E4%B8%8D%E6%98%AF%E5%8F%AA%E7%94%BB%E4%B8%80%E5%BC%A0%E5%9B%BE"><span class="nav-number">3.</span> <span class="nav-text">生成并不是只画一张图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E7%A1%AE%E5%AE%9A%E4%B8%BB%E5%BD%A2%E8%B1%A1"><span class="nav-number">3.1.</span> <span class="nav-text">第一步：确定主形象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E7%94%9F%E6%88%90-9-%E7%A7%8D%E6%A0%87%E5%87%86%E7%8A%B6%E6%80%81"><span class="nav-number">3.2.</span> <span class="nav-text">第二步：生成 9 种标准状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%A1%A5%E9%BD%90-16-%E4%B8%AA%E8%A7%82%E5%AF%9F%E6%96%B9%E5%90%91"><span class="nav-number">3.3.</span> <span class="nav-text">第三步：补齐 16 个观察方向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E5%88%87%E5%B8%A7%E3%80%81%E5%8E%BB%E8%83%8C%E6%99%AF%E5%92%8C%E6%89%93%E5%8C%85"><span class="nav-number">3.4.</span> <span class="nav-text">第四步：切帧、去背景和打包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%99%E6%AC%A1%E7%94%9F%E6%88%90%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">这次生成中遇到的两个问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E9%82%BB%E5%A4%B4%E7%BA%B1%E8%BF%9E%E5%9C%A8%E4%BA%86%E4%B8%80%E8%B5%B7"><span class="nav-number">4.1.</span> <span class="nav-text">相邻头纱连在了一起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%90%8E%E7%9A%84%E5%A4%B4%E7%BA%B1%E5%87%BA%E7%8E%B0%E4%BA%86%E7%A2%8E%E7%89%87"><span class="nav-number">4.2.</span> <span class="nav-text">镜像后的头纱出现了碎片</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C%E5%A6%82%E4%BD%95"><span class="nav-number">5.</span> <span class="nav-text">最终效果如何</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E4%B9%9F%E6%83%B3%E7%94%9F%E6%88%90%E4%B8%80%E4%B8%AA"><span class="nav-number">6.</span> <span class="nav-text">如果你也想生成一个</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Corning Sun"
+      src="/images/ning.jpg">
+  <p class="site-author-name" itemprop="name">Corning Sun</p>
+  <div class="site-description" itemprop="description">家家有本难念的经</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/corningsun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;corningsun" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:corningsun@163.com" title="E-Mail → mailto:corningsun@163.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://corningsun.github.io/Create-Codex-Pet-Kinga/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/ning.jpg">
+      <meta itemprop="name" content="Corning Sun">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Corning Sun's Blog">
+      <meta itemprop="description" content="家家有本难念的经">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程 | Corning Sun's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-09-04 17:55:00 / 修改时间：17:54:06" itemprop="dateCreated datePublished" datetime="2026-09-04T17:55:00+08:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/Codex/" itemprop="url" rel="index"><span itemprop="name">Codex</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>欢迎转载，原文链接：<a href="https://corningsun.github.io/Create-Codex-Pet-Kinga/">https://corningsun.github.io/Create-Codex-Pet-Kinga/</a></p>
+</blockquote>
+<p>最近我用一张婚纱照，在 Codex 里生成了一个叫 <code>kinga</code> 的宠物。这里的 “宠物” 并不是一张静态头像，而是一套会跟着 Codex 工作状态变化的动画角色：空闲时会呼吸和眨眼，工作时会进入专注状态，需要我确认时会等待，任务失败时也会露出沮丧的表情。</p>
+<p>这是最终的待机效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-idle.gif" alt="kinga 待机动画"></p>
+<span id="more"></span>
+
+<h2 id="Codex-宠物是什么"><a href="#Codex-宠物是什么" class="headerlink" title="Codex 宠物是什么"></a>Codex 宠物是什么</h2><p>从用户视角看，Codex 宠物就是出现在应用里的一个小型动画伙伴。它不是独立运行的软件，也不会替代 Codex 的功能，而是把一些原本比较抽象的状态变得直观：</p>
+<ul>
+<li>Codex 正在空闲，宠物会播放待机动画。</li>
+<li>Codex 正在执行任务，宠物会表现出专注工作的状态。</li>
+<li>Codex 需要用户确认或补充信息，宠物会进入等待状态。</li>
+<li>Codex 正在检查结果，宠物会播放审阅动画。</li>
+<li>任务成功、失败或状态切换时，也可以使用不同动作表达。</li>
+</ul>
+<p>在文件层面，一个完整的 v2 宠物主要由两个文件组成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.codex/pets/kinga/</span><br><span class="line">├── pet.json</span><br><span class="line">└── spritesheet.webp</span><br></pre></td></tr></table></figure>
+
+<p><code>pet.json</code> 描述宠物名称和图集版本，<code>spritesheet.webp</code> 则保存全部动作帧。这次生成的图集是 <code>1536 × 2288</code>，由 8 列、11 行组成，每个单元格是 <code>192 × 208</code>。</p>
+<h2 id="我提供了什么"><a href="#我提供了什么" class="headerlink" title="我提供了什么"></a>我提供了什么</h2><p>实际操作时，我只提供了两样东西：</p>
+<ol>
+<li>一张人物照片。</li>
+<li>宠物名字：<code>kinga</code>。</li>
+</ol>
+<p>我的请求也很简单：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用这张照片生成一个宠物，名字叫 kinga。</span><br></pre></td></tr></table></figure>
+
+<p>我没有要求 AI 把照片直接缩小，也没有手工描述几十个动作。生成流程先从照片里提取稳定的视觉特征，再把这些特征转成适合小尺寸动画的卡通角色。</p>
+<p>这次保留下来的特征包括黑色盘发、温暖的笑容、白色蕾丝婚纱、头纱和枝晶形王冠。整体则改成大头小身的 3D 软陶玩偶风，让人物在 <code>192 × 208</code> 的显示尺寸下仍然容易辨认。</p>
+<p>需要注意的是，人物照片属于敏感素材。生成前应确认本人同意，并了解图片会提交给图像生成服务处理。本文只展示卡通化后的结果，没有上传或公开原始婚纱照。</p>
+<h2 id="生成并不是只画一张图"><a href="#生成并不是只画一张图" class="headerlink" title="生成并不是只画一张图"></a>生成并不是只画一张图</h2><p>如果只需要静态头像，生成一张主图就结束了。但 Codex 宠物需要响应不同状态，因此真正的工作是先确定主形象，再围绕它生成完整的动画图集。</p>
+<p>整个过程可以分成四步。</p>
+<h3 id="第一步：确定主形象"><a href="#第一步：确定主形象" class="headerlink" title="第一步：确定主形象"></a>第一步：确定主形象</h3><p>系统先根据照片生成一张居中的全身角色图。这张图相当于后续所有动作的“身份证”：脸型、发型、服装、王冠、头纱、身体比例和材质都要以它为准。</p>
+<p>这一步最重要的不是动作有多丰富，而是让角色简单、稳定、容易重复。过细的首饰、飘散的亮片和复杂背景都会给后续切帧制造麻烦，因此主形象使用纯色背景，也没有添加阴影、文字或悬浮装饰。</p>
+<h3 id="第二步：生成-9-种标准状态"><a href="#第二步：生成-9-种标准状态" class="headerlink" title="第二步：生成 9 种标准状态"></a>第二步：生成 9 种标准状态</h3><p>确认主形象后，系统分别生成 9 行动画：</p>
+<table>
+<thead>
+<tr>
+<th>行</th>
+<th>状态</th>
+<th>动画含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>idle</td>
+<td>空闲时呼吸、眨眼和轻微摆动</td>
+</tr>
+<tr>
+<td>1</td>
+<td>running-right</td>
+<td>向屏幕右侧移动</td>
+</tr>
+<tr>
+<td>2</td>
+<td>running-left</td>
+<td>向屏幕左侧移动</td>
+</tr>
+<tr>
+<td>3</td>
+<td>waving</td>
+<td>挥手打招呼</td>
+</tr>
+<tr>
+<td>4</td>
+<td>jumping</td>
+<td>起跳、腾空、下降和落稳</td>
+</tr>
+<tr>
+<td>5</td>
+<td>failed</td>
+<td>任务失败或执行受阻</td>
+</tr>
+<tr>
+<td>6</td>
+<td>waiting</td>
+<td>等待用户确认、帮助或输入</td>
+</tr>
+<tr>
+<td>7</td>
+<td>running</td>
+<td>正在处理任务，不是字面上的跑步</td>
+</tr>
+<tr>
+<td>8</td>
+<td>review</td>
+<td>专注检查结果</td>
+</tr>
+</tbody></table>
+<p>挥手和跳跃的实际效果如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-waving.gif" alt="kinga 挥手动画"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-jumping.gif" alt="kinga 跳跃动画"></p>
+<p>方向移动不是简单把整张图片平移，而是让脚步、裙摆和头纱形成连续的动作节奏：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-running-right.gif" alt="kinga 向右移动动画"></p>
+<p><code>running</code> 和 <code>running-right</code> 很容易混淆。前者代表 Codex 正在工作，所以动作重点是思考、处理和专注；后者才是真正向右移动。这样宠物的动作才能准确对应应用状态，而不是一忙起来就在原地狂奔。</p>
+<h3 id="第三步：补齐-16-个观察方向"><a href="#第三步：补齐-16-个观察方向" class="headerlink" title="第三步：补齐 16 个观察方向"></a>第三步：补齐 16 个观察方向</h3><p>v2 宠物除了标准状态，还需要 16 个顺时针观察方向，每次递进 <code>22.5°</code>。其中四个基准方向必须清楚：</p>
+<ul>
+<li><code>000</code>：向上看。</li>
+<li><code>090</code>：向屏幕右侧看。</li>
+<li><code>180</code>：向下看。</li>
+<li><code>270</code>：向屏幕左侧看。</li>
+</ul>
+<p>对于 <code>kinga</code> 这种人形宠物，比较自然的方式不是把整个人偶像转盘一样旋转，而是让眼睛先带动视线，头颈和上半身轻微跟随，同时保持脚和裙摆底部稳定。王冠跟随头部，头纱可以略有滞后，但不能突然换边或与身体断开。</p>
+<p>下面是中立姿势与 16 个观察方向的对照：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-look-directions.png" alt="kinga 16 个观察方向"></p>
+<h3 id="第四步：切帧、去背景和打包"><a href="#第四步：切帧、去背景和打包" class="headerlink" title="第四步：切帧、去背景和打包"></a>第四步：切帧、去背景和打包</h3><p>图像生成模型擅长画角色，却不适合负责精确的图集几何。因此生成出来的横向动作条还需要经过确定性处理：</p>
+<ol>
+<li>从纯色背景中识别每个完整姿势。</li>
+<li>把姿势缩放并对齐到 <code>192 × 208</code> 单元格。</li>
+<li>保持同一行的比例和基线稳定。</li>
+<li>清除背景和角色边缘的残留色。</li>
+<li>组装成 8 列、11 行的 v2 图集。</li>
+<li>生成预览 GIF、动作总览和方向检查图。</li>
+<li>校验尺寸、透明度、空帧、裁切和方向语义。</li>
+</ol>
+<p>最后生成的配置类似这样：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;kinga&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;displayName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;kinga&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;以婚纱照为灵感、笑容温暖的迷你新娘精灵宠物.&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spriteVersionNumber&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spritesheetPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;spritesheet.webp&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>spriteVersionNumber: 2</code> 不能省略，否则应用会按旧版 9 行格式读取，无法正确识别新增的观察方向。</p>
+<h2 id="这次生成中遇到的两个问题"><a href="#这次生成中遇到的两个问题" class="headerlink" title="这次生成中遇到的两个问题"></a>这次生成中遇到的两个问题</h2><p>AI 生成动画最容易出现的问题，不一定是“画得不好看”，而是“看起来没问题，但无法稳定切成帧”。</p>
+<h3 id="相邻头纱连在了一起"><a href="#相邻头纱连在了一起" class="headerlink" title="相邻头纱连在了一起"></a>相邻头纱连在了一起</h3><p>第一版待机和向右移动动作里，人物造型本身没有问题，但相邻姿势的头纱边缘碰到了一起。自动切帧时，多个角色因此被识别成同一个连通区域，结果只有中间单元格有完整内容，其他单元格几乎是空的。</p>
+<p>修复方法不是手工把图切开，而是重新生成整行动画，并明确要求：</p>
+<ul>
+<li>每个姿势之间保留贯穿画布的纯色竖向空隙。</li>
+<li>头纱、王冠枝条、裙摆和手臂不能跨到相邻槽位。</li>
+<li>角色整体略微缩小，给左右边缘留下安全距离。</li>
+</ul>
+<p>重新生成后，6 帧待机和 8 帧向右移动都通过了组件检查。</p>
+<h3 id="镜像后的头纱出现了碎片"><a href="#镜像后的头纱出现了碎片" class="headerlink" title="镜像后的头纱出现了碎片"></a>镜像后的头纱出现了碎片</h3><p>最初的向左移动是由向右移动逐帧镜像得到的。结构校验虽然通过，但最终独立视觉检查发现其中两帧旁边各有一小块脱离身体的三角形头纱碎片。</p>
+<p>这种问题不能因为 “很小” 就留下，也不应该只把最终图集中的两个单元格擦掉。为保证整行动作风格和节奏一致，我重新生成了完整的向左移动行，并再次执行切帧、预览、图集组装和最终检查。</p>
+<p>这个过程让我感觉，宠物生成更像制作一组微型动画，而不是一次性的 AI 绘图。</p>
+<h2 id="最终效果如何"><a href="#最终效果如何" class="headerlink" title="最终效果如何"></a>最终效果如何</h2><p><code>kinga</code> 最终包含：</p>
+<ul>
+<li>9 组标准状态动画。</li>
+<li>16 个顺时针观察方向。</li>
+<li>透明背景的 <code>1536 × 2288</code> WebP 图集。</li>
+<li>用于安装的 v2 配置文件。</li>
+</ul>
+<p>最终校验没有发现空帧、尺寸错误、透明背景残留或错误的基准方向。三组独立的无标签方向检查也正确区分了向上、向下、向左和向右。</p>
+<p>审阅状态在应用里会表现得更专注，而不只是重复待机动作：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-review.gif" alt="kinga 审阅动画"></p>
+<p>从体验上看，最有意思的并不是把照片“变成卡通”，而是让照片中的人物特征变成一个会呼吸、移动、等待和专注工作的角色。静态头像只能告诉我“它长什么样”，完整的宠物动画则开始表现“它现在正在做什么”。</p>
+<h2 id="如果你也想生成一个"><a href="#如果你也想生成一个" class="headerlink" title="如果你也想生成一个"></a>如果你也想生成一个</h2><p>对普通用户来说，不需要自己准备图集，也不需要手工计算每一帧的位置。比较实用的输入方式是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用这张参考图生成一个 Codex 宠物。</span><br><span class="line">名字叫 &lt;宠物名&gt;，希望保留 &lt;关键特征&gt;，整体使用 &lt;视觉风格&gt;。</span><br></pre></td></tr></table></figure>
+
+<p>参考图越清楚，角色身份越容易保持一致。最好再补充三类信息：</p>
+<ul>
+<li>必须保留的特征，例如发型、眼镜、服装或配色。</li>
+<li>希望采用的风格，例如像素、毛绒、软陶、贴纸或 3D 玩具。</li>
+<li>不希望出现的内容，例如文字、复杂背景、阴影或额外道具。</li>
+</ul>
+<p>剩下的动作拆分、方向生成、图集组装和校验，可以交给宠物生成流程处理。真正需要用户决定的，主要是这个角色应该保留什么，以及最终看起来是否仍然像自己想要的那个“它”。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Codex/" rel="tag"># Codex</a>
+              <a href="/tags/Image-Generation/" rel="tag"># Image Generation</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/Apache-POI-SXSSF-RichText-Bold/" rel="prev" title="Apache POI SXSSF 流式输出时富文本加粗失效排查">
+                  <i class="fa fa-angle-left"></i> Apache POI SXSSF 流式输出时富文本加粗失效排查
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Corning Sun</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

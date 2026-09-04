@@ -40,6 +40,15 @@
       </tags>
   </entry>
   <entry>
+    <title>2026 开工大吉</title>
+    <url>/20260224NewYear/</url>
+    <content><![CDATA[<blockquote>
+<p>欢迎转载，原文链接：<a href="https://corningsun.github.io/20260224NewYear">https://corningsun.github.io/20260224NewYear</a></p>
+</blockquote>
+<h2 id="新年快乐！"><a href="#新年快乐！" class="headerlink" title="新年快乐！"></a>新年快乐！</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/20260224_%E9%A9%AC%E5%88%B0%E6%88%90%E5%8A%9F.jpeg"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>AI 生成图片</title>
     <url>/AiImageDesigner/</url>
     <content><![CDATA[<blockquote>
@@ -187,6 +196,173 @@
       </tags>
   </entry>
   <entry>
+    <title>把一张婚纱照变成 Codex 宠物：Kinga 的生成全过程</title>
+    <url>/Create-Codex-Pet-Kinga/</url>
+    <content><![CDATA[<blockquote>
+<p>欢迎转载，原文链接：<a href="https://corningsun.github.io/Create-Codex-Pet-Kinga/">https://corningsun.github.io/Create-Codex-Pet-Kinga/</a></p>
+</blockquote>
+<p>最近我用一张婚纱照，在 Codex 里生成了一个叫 <code>kinga</code> 的宠物。这里的 “宠物” 并不是一张静态头像，而是一套会跟着 Codex 工作状态变化的动画角色：空闲时会呼吸和眨眼，工作时会进入专注状态，需要我确认时会等待，任务失败时也会露出沮丧的表情。</p>
+<p>这是最终的待机效果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-idle.gif" alt="kinga 待机动画"></p>
+<span id="more"></span>
+
+<h2 id="Codex-宠物是什么"><a href="#Codex-宠物是什么" class="headerlink" title="Codex 宠物是什么"></a>Codex 宠物是什么</h2><p>从用户视角看，Codex 宠物就是出现在应用里的一个小型动画伙伴。它不是独立运行的软件，也不会替代 Codex 的功能，而是把一些原本比较抽象的状态变得直观：</p>
+<ul>
+<li>Codex 正在空闲，宠物会播放待机动画。</li>
+<li>Codex 正在执行任务，宠物会表现出专注工作的状态。</li>
+<li>Codex 需要用户确认或补充信息，宠物会进入等待状态。</li>
+<li>Codex 正在检查结果，宠物会播放审阅动画。</li>
+<li>任务成功、失败或状态切换时，也可以使用不同动作表达。</li>
+</ul>
+<p>在文件层面，一个完整的 v2 宠物主要由两个文件组成：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">~/.codex/pets/kinga/</span><br><span class="line">├── pet.json</span><br><span class="line">└── spritesheet.webp</span><br></pre></td></tr></table></figure>
+
+<p><code>pet.json</code> 描述宠物名称和图集版本，<code>spritesheet.webp</code> 则保存全部动作帧。这次生成的图集是 <code>1536 × 2288</code>，由 8 列、11 行组成，每个单元格是 <code>192 × 208</code>。</p>
+<h2 id="我提供了什么"><a href="#我提供了什么" class="headerlink" title="我提供了什么"></a>我提供了什么</h2><p>实际操作时，我只提供了两样东西：</p>
+<ol>
+<li>一张人物照片。</li>
+<li>宠物名字：<code>kinga</code>。</li>
+</ol>
+<p>我的请求也很简单：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">用这张照片生成一个宠物，名字叫 kinga。</span><br></pre></td></tr></table></figure>
+
+<p>我没有要求 AI 把照片直接缩小，也没有手工描述几十个动作。生成流程先从照片里提取稳定的视觉特征，再把这些特征转成适合小尺寸动画的卡通角色。</p>
+<p>这次保留下来的特征包括黑色盘发、温暖的笑容、白色蕾丝婚纱、头纱和枝晶形王冠。整体则改成大头小身的 3D 软陶玩偶风，让人物在 <code>192 × 208</code> 的显示尺寸下仍然容易辨认。</p>
+<p>需要注意的是，人物照片属于敏感素材。生成前应确认本人同意，并了解图片会提交给图像生成服务处理。本文只展示卡通化后的结果，没有上传或公开原始婚纱照。</p>
+<h2 id="生成并不是只画一张图"><a href="#生成并不是只画一张图" class="headerlink" title="生成并不是只画一张图"></a>生成并不是只画一张图</h2><p>如果只需要静态头像，生成一张主图就结束了。但 Codex 宠物需要响应不同状态，因此真正的工作是先确定主形象，再围绕它生成完整的动画图集。</p>
+<p>整个过程可以分成四步。</p>
+<h3 id="第一步：确定主形象"><a href="#第一步：确定主形象" class="headerlink" title="第一步：确定主形象"></a>第一步：确定主形象</h3><p>系统先根据照片生成一张居中的全身角色图。这张图相当于后续所有动作的“身份证”：脸型、发型、服装、王冠、头纱、身体比例和材质都要以它为准。</p>
+<p>这一步最重要的不是动作有多丰富，而是让角色简单、稳定、容易重复。过细的首饰、飘散的亮片和复杂背景都会给后续切帧制造麻烦，因此主形象使用纯色背景，也没有添加阴影、文字或悬浮装饰。</p>
+<h3 id="第二步：生成-9-种标准状态"><a href="#第二步：生成-9-种标准状态" class="headerlink" title="第二步：生成 9 种标准状态"></a>第二步：生成 9 种标准状态</h3><p>确认主形象后，系统分别生成 9 行动画：</p>
+<table>
+<thead>
+<tr>
+<th>行</th>
+<th>状态</th>
+<th>动画含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>idle</td>
+<td>空闲时呼吸、眨眼和轻微摆动</td>
+</tr>
+<tr>
+<td>1</td>
+<td>running-right</td>
+<td>向屏幕右侧移动</td>
+</tr>
+<tr>
+<td>2</td>
+<td>running-left</td>
+<td>向屏幕左侧移动</td>
+</tr>
+<tr>
+<td>3</td>
+<td>waving</td>
+<td>挥手打招呼</td>
+</tr>
+<tr>
+<td>4</td>
+<td>jumping</td>
+<td>起跳、腾空、下降和落稳</td>
+</tr>
+<tr>
+<td>5</td>
+<td>failed</td>
+<td>任务失败或执行受阻</td>
+</tr>
+<tr>
+<td>6</td>
+<td>waiting</td>
+<td>等待用户确认、帮助或输入</td>
+</tr>
+<tr>
+<td>7</td>
+<td>running</td>
+<td>正在处理任务，不是字面上的跑步</td>
+</tr>
+<tr>
+<td>8</td>
+<td>review</td>
+<td>专注检查结果</td>
+</tr>
+</tbody></table>
+<p>挥手和跳跃的实际效果如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-waving.gif" alt="kinga 挥手动画"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-jumping.gif" alt="kinga 跳跃动画"></p>
+<p>方向移动不是简单把整张图片平移，而是让脚步、裙摆和头纱形成连续的动作节奏：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-running-right.gif" alt="kinga 向右移动动画"></p>
+<p><code>running</code> 和 <code>running-right</code> 很容易混淆。前者代表 Codex 正在工作，所以动作重点是思考、处理和专注；后者才是真正向右移动。这样宠物的动作才能准确对应应用状态，而不是一忙起来就在原地狂奔。</p>
+<h3 id="第三步：补齐-16-个观察方向"><a href="#第三步：补齐-16-个观察方向" class="headerlink" title="第三步：补齐 16 个观察方向"></a>第三步：补齐 16 个观察方向</h3><p>v2 宠物除了标准状态，还需要 16 个顺时针观察方向，每次递进 <code>22.5°</code>。其中四个基准方向必须清楚：</p>
+<ul>
+<li><code>000</code>：向上看。</li>
+<li><code>090</code>：向屏幕右侧看。</li>
+<li><code>180</code>：向下看。</li>
+<li><code>270</code>：向屏幕左侧看。</li>
+</ul>
+<p>对于 <code>kinga</code> 这种人形宠物，比较自然的方式不是把整个人偶像转盘一样旋转，而是让眼睛先带动视线，头颈和上半身轻微跟随，同时保持脚和裙摆底部稳定。王冠跟随头部，头纱可以略有滞后，但不能突然换边或与身体断开。</p>
+<p>下面是中立姿势与 16 个观察方向的对照：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-look-directions.png" alt="kinga 16 个观察方向"></p>
+<h3 id="第四步：切帧、去背景和打包"><a href="#第四步：切帧、去背景和打包" class="headerlink" title="第四步：切帧、去背景和打包"></a>第四步：切帧、去背景和打包</h3><p>图像生成模型擅长画角色，却不适合负责精确的图集几何。因此生成出来的横向动作条还需要经过确定性处理：</p>
+<ol>
+<li>从纯色背景中识别每个完整姿势。</li>
+<li>把姿势缩放并对齐到 <code>192 × 208</code> 单元格。</li>
+<li>保持同一行的比例和基线稳定。</li>
+<li>清除背景和角色边缘的残留色。</li>
+<li>组装成 8 列、11 行的 v2 图集。</li>
+<li>生成预览 GIF、动作总览和方向检查图。</li>
+<li>校验尺寸、透明度、空帧、裁切和方向语义。</li>
+</ol>
+<p>最后生成的配置类似这样：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;kinga&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;displayName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;kinga&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;以婚纱照为灵感、笑容温暖的迷你新娘精灵宠物.&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spriteVersionNumber&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;spritesheetPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;spritesheet.webp&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>spriteVersionNumber: 2</code> 不能省略，否则应用会按旧版 9 行格式读取，无法正确识别新增的观察方向。</p>
+<h2 id="这次生成中遇到的两个问题"><a href="#这次生成中遇到的两个问题" class="headerlink" title="这次生成中遇到的两个问题"></a>这次生成中遇到的两个问题</h2><p>AI 生成动画最容易出现的问题，不一定是“画得不好看”，而是“看起来没问题，但无法稳定切成帧”。</p>
+<h3 id="相邻头纱连在了一起"><a href="#相邻头纱连在了一起" class="headerlink" title="相邻头纱连在了一起"></a>相邻头纱连在了一起</h3><p>第一版待机和向右移动动作里，人物造型本身没有问题，但相邻姿势的头纱边缘碰到了一起。自动切帧时，多个角色因此被识别成同一个连通区域，结果只有中间单元格有完整内容，其他单元格几乎是空的。</p>
+<p>修复方法不是手工把图切开，而是重新生成整行动画，并明确要求：</p>
+<ul>
+<li>每个姿势之间保留贯穿画布的纯色竖向空隙。</li>
+<li>头纱、王冠枝条、裙摆和手臂不能跨到相邻槽位。</li>
+<li>角色整体略微缩小，给左右边缘留下安全距离。</li>
+</ul>
+<p>重新生成后，6 帧待机和 8 帧向右移动都通过了组件检查。</p>
+<h3 id="镜像后的头纱出现了碎片"><a href="#镜像后的头纱出现了碎片" class="headerlink" title="镜像后的头纱出现了碎片"></a>镜像后的头纱出现了碎片</h3><p>最初的向左移动是由向右移动逐帧镜像得到的。结构校验虽然通过，但最终独立视觉检查发现其中两帧旁边各有一小块脱离身体的三角形头纱碎片。</p>
+<p>这种问题不能因为 “很小” 就留下，也不应该只把最终图集中的两个单元格擦掉。为保证整行动作风格和节奏一致，我重新生成了完整的向左移动行，并再次执行切帧、预览、图集组装和最终检查。</p>
+<p>这个过程让我感觉，宠物生成更像制作一组微型动画，而不是一次性的 AI 绘图。</p>
+<h2 id="最终效果如何"><a href="#最终效果如何" class="headerlink" title="最终效果如何"></a>最终效果如何</h2><p><code>kinga</code> 最终包含：</p>
+<ul>
+<li>9 组标准状态动画。</li>
+<li>16 个顺时针观察方向。</li>
+<li>透明背景的 <code>1536 × 2288</code> WebP 图集。</li>
+<li>用于安装的 v2 配置文件。</li>
+</ul>
+<p>最终校验没有发现空帧、尺寸错误、透明背景残留或错误的基准方向。三组独立的无标签方向检查也正确区分了向上、向下、向左和向右。</p>
+<p>审阅状态在应用里会表现得更专注，而不只是重复待机动作：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/kinga-review.gif" alt="kinga 审阅动画"></p>
+<p>从体验上看，最有意思的并不是把照片“变成卡通”，而是让照片中的人物特征变成一个会呼吸、移动、等待和专注工作的角色。静态头像只能告诉我“它长什么样”，完整的宠物动画则开始表现“它现在正在做什么”。</p>
+<h2 id="如果你也想生成一个"><a href="#如果你也想生成一个" class="headerlink" title="如果你也想生成一个"></a>如果你也想生成一个</h2><p>对普通用户来说，不需要自己准备图集，也不需要手工计算每一帧的位置。比较实用的输入方式是：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">用这张参考图生成一个 Codex 宠物。</span><br><span class="line">名字叫 &lt;宠物名&gt;，希望保留 &lt;关键特征&gt;，整体使用 &lt;视觉风格&gt;。</span><br></pre></td></tr></table></figure>
+
+<p>参考图越清楚，角色身份越容易保持一致。最好再补充三类信息：</p>
+<ul>
+<li>必须保留的特征，例如发型、眼镜、服装或配色。</li>
+<li>希望采用的风格，例如像素、毛绒、软陶、贴纸或 3D 玩具。</li>
+<li>不希望出现的内容，例如文字、复杂背景、阴影或额外道具。</li>
+</ul>
+<p>剩下的动作拆分、方向生成、图集组装和校验，可以交给宠物生成流程处理。真正需要用户决定的，主要是这个角色应该保留什么，以及最终看起来是否仍然像自己想要的那个“它”。</p>
+]]></content>
+      <categories>
+        <category>AI</category>
+        <category>Codex</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+        <tag>Codex</tag>
+        <tag>Image Generation</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DesignPattern 设计模式 - 总览</title>
     <url>/DesignPatternAll/</url>
     <content><![CDATA[<p><img src="http://cdn2.snapgram.co/imgs/2015/11/23/78ee3b82d9838e9c.jpg" alt="设计模式总览"></p>
@@ -227,13 +403,87 @@
       </tags>
   </entry>
   <entry>
-    <title>2026 开工大吉</title>
-    <url>/20260224NewYear/</url>
-    <content><![CDATA[<blockquote>
-<p>欢迎转载，原文链接：<a href="https://corningsun.github.io/20260224NewYear">https://corningsun.github.io/20260224NewYear</a></p>
-</blockquote>
-<h2 id="新年快乐！"><a href="#新年快乐！" class="headerlink" title="新年快乐！"></a>新年快乐！</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2026/20260224_%E9%A9%AC%E5%88%B0%E6%88%90%E5%8A%9F.jpeg"></p>
+    <title>Funny</title>
+    <url>/Funny/</url>
+    <content><![CDATA[<h2 id="Funny-Pictures"><a href="#Funny-Pictures" class="headerlink" title="Funny Pictures"></a>Funny Pictures</h2><ul>
+<li>The Age of Innocence<br><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/XalaZHx.gif" alt="The Age of Innocence"></li>
+</ul>
+<span id="more"></span>
 ]]></content>
+      <categories>
+        <category>Funny</category>
+      </categories>
+      <tags>
+        <tag>Funny</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GitKraken</title>
+    <url>/GitKrakenTest/</url>
+    <content><![CDATA[<h2 id="GitKraken"><a href="#GitKraken" class="headerlink" title="GitKraken"></a><a href="https://www.gitkraken.com/" title="https:&#x2F;&#x2F;www.gitkraken.com&#x2F;">GitKraken</a></h2><p>以前一直使用 Eclipse 中的 EGit 插件，感觉非常好用。最近在做 Python 项目，感觉 PyCharm 自带的不太好用，找了个几个 Git 客户端图形化工具，这个感觉还可以，先用几天试试。</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-03-14-145709.jpg-o"></p>
+<span id="more"></span>
+
+<h2 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h2><ul>
+<li><p><a href="https://www.sourcetreeapp.com/" title="https:&#x2F;&#x2F;www.sourcetreeapp.com&#x2F;">SourceTree</a></p>
+<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-14-150329.jpg-o"></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git 入门</title>
+    <url>/GitStart/</url>
+    <content><![CDATA[<h1 id="About-Git"><a href="#About-Git" class="headerlink" title="About Git"></a>About Git</h1><p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. </p>
+<span id="more"></span>
+
+<h1 id="Git-下载"><a href="#Git-下载" class="headerlink" title="Git 下载"></a>Git 下载</h1><ul>
+<li><a href="http://git-scm.com/" title="http:&#x2F;&#x2F;git-scm.com&#x2F;">Git 官网</a></li>
+</ul>
+<h1 id="Git-详解"><a href="#Git-详解" class="headerlink" title="Git 详解"></a>Git 详解</h1><p>感谢 <strong><a href="http://www.open-open.com/lib/" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;">Open 经验库</a></strong> 上无私奉献的人们！</p>
+<ul>
+<li><a href="http://www.open-open.com/lib/view/open1328069609436.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069609436.html">Git 详解之一 Git 起步 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328069733264.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069733264.html">Git 详解之二 Git 基础 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328069889514.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069889514.html">Git 详解之三 Git 分支 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328069988843.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069988843.html">Git 详解之四 服务器上的 Git </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328070090108.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070090108.html">Git 详解之五 分布式 Git </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328070367499.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070367499.html">Git 详解之六 Git 工具 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328070404827.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070404827.html">Git 详解之七 自定义 Git </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328070454218.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070454218.html">Git 详解之八 Git 与其他系统 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328070620202.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070620202.html">Git 详解之九 Git 内部原理 </a></li>
+</ul>
+<h1 id="Eclipse-上-Git-插件-EGit"><a href="#Eclipse-上-Git-插件-EGit" class="headerlink" title="Eclipse 上 Git 插件 EGit"></a>Eclipse 上 Git 插件 EGit</h1><h2 id="EGit-使用手册"><a href="#EGit-使用手册" class="headerlink" title="EGit 使用手册"></a>EGit 使用手册</h2><ul>
+<li><a href="http://www.open-open.com/lib/view/open1328435419702.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435419702.html">Eclipse 上 GIT 插件 EGIT 使用手册之一_安装 EGIT 插件 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435704515.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435704515.html">Eclipse 上 GIT 插件 EGIT 使用手册之二_使用 EGIT 前的配置 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435726296.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435726296.html">Eclipse 上 GIT 插件 EGIT 使用手册之三_新建 GIT 仓库 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435752656.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435752656.html">Eclipse 上 GIT 插件 EGIT 使用手册之四_配置. gitignore </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435777937.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435777937.html">Eclipse 上 GIT 插件 EGIT 使用手册之五_查看历史记录 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435802187.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435802187.html">Eclipse 上 GIT 插件 EGIT 使用手册之六_远程 GIT 仓库 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435839500.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435839500.html">Eclipse 上 GIT 插件 EGIT 使用手册之七_推送远程仓库 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435861484.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435861484.html">Eclipse 上 GIT 插件 EGIT 使用手册之八_解决推送冲突 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435894375.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435894375.html">Eclipse 上 GIT 插件 EGIT 使用手册之九_Rebase 和 Merge 的区别 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435920046.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435920046.html">Eclipse 上 GIT 插件 EGIT 使用手册之十_Rebase 和 Merge 如何选择的简单解析 </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435965781.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435965781.html">Eclipse 上 GIT 插件 EGIT 使用手册之十一_Fetch 和 Rebase </a></li>
+<li><a href="http://www.open-open.com/lib/view/open1328435992703.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435992703.html">Eclipse 上 GIT 插件 EGIT 使用手册之十二_重置功能 </a></li>
+</ul>
+<h2 id="EGit-User-Gudie"><a href="#EGit-User-Gudie" class="headerlink" title="EGit User Gudie"></a>EGit User Gudie</h2><p><a href="http://wiki.eclipse.org/EGit/User_Guide" title="http:&#x2F;&#x2F;wiki.eclipse.org&#x2F;EGit&#x2F;User_Guide">EGit User Gudie</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+        <tag>Git</tag>
+      </tags>
   </entry>
   <entry>
     <title>DesignPattern 设计模式 - 总览</title>
@@ -332,43 +582,6 @@
       <tags>
         <tag>Java</tag>
         <tag>DesignPattern</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Funny</title>
-    <url>/Funny/</url>
-    <content><![CDATA[<h2 id="Funny-Pictures"><a href="#Funny-Pictures" class="headerlink" title="Funny Pictures"></a>Funny Pictures</h2><ul>
-<li>The Age of Innocence<br><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/XalaZHx.gif" alt="The Age of Innocence"></li>
-</ul>
-<span id="more"></span>
-]]></content>
-      <categories>
-        <category>Funny</category>
-      </categories>
-      <tags>
-        <tag>Funny</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GitKraken</title>
-    <url>/GitKrakenTest/</url>
-    <content><![CDATA[<h2 id="GitKraken"><a href="#GitKraken" class="headerlink" title="GitKraken"></a><a href="https://www.gitkraken.com/" title="https:&#x2F;&#x2F;www.gitkraken.com&#x2F;">GitKraken</a></h2><p>以前一直使用 Eclipse 中的 EGit 插件，感觉非常好用。最近在做 Python 项目，感觉 PyCharm 自带的不太好用，找了个几个 Git 客户端图形化工具，这个感觉还可以，先用几天试试。</p>
-<p><img src="http://corningsun.qiniudn.com/blog/2017-03-14-145709.jpg-o"></p>
-<span id="more"></span>
-
-<h2 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h2><ul>
-<li><p><a href="https://www.sourcetreeapp.com/" title="https:&#x2F;&#x2F;www.sourcetreeapp.com&#x2F;">SourceTree</a></p>
-<p>  <img src="http://corningsun.qiniudn.com/blog/2017-03-14-150329.jpg-o"></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
-        <tag>Git</tag>
       </tags>
   </entry>
   <entry>
@@ -485,49 +698,27 @@
       </tags>
   </entry>
   <entry>
-    <title>Git 入门</title>
-    <url>/GitStart/</url>
-    <content><![CDATA[<h1 id="About-Git"><a href="#About-Git" class="headerlink" title="About Git"></a>About Git</h1><p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. </p>
-<span id="more"></span>
-
-<h1 id="Git-下载"><a href="#Git-下载" class="headerlink" title="Git 下载"></a>Git 下载</h1><ul>
-<li><a href="http://git-scm.com/" title="http:&#x2F;&#x2F;git-scm.com&#x2F;">Git 官网</a></li>
-</ul>
-<h1 id="Git-详解"><a href="#Git-详解" class="headerlink" title="Git 详解"></a>Git 详解</h1><p>感谢 <strong><a href="http://www.open-open.com/lib/" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;">Open 经验库</a></strong> 上无私奉献的人们！</p>
+    <title>IntelliJ IDEA 插件</title>
+    <url>/IdeaPlugins/</url>
+    <content><![CDATA[<blockquote>
+<p>记录自己用的 Idea 插件</p>
+</blockquote>
 <ul>
-<li><a href="http://www.open-open.com/lib/view/open1328069609436.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069609436.html">Git 详解之一 Git 起步 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328069733264.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069733264.html">Git 详解之二 Git 基础 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328069889514.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069889514.html">Git 详解之三 Git 分支 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328069988843.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328069988843.html">Git 详解之四 服务器上的 Git </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328070090108.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070090108.html">Git 详解之五 分布式 Git </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328070367499.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070367499.html">Git 详解之六 Git 工具 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328070404827.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070404827.html">Git 详解之七 自定义 Git </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328070454218.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070454218.html">Git 详解之八 Git 与其他系统 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328070620202.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328070620202.html">Git 详解之九 Git 内部原理 </a></li>
+<li>Maven Helper</li>
+<li>SonarLint</li>
+<li>Alibaba Java Coding Guidelines</li>
+<li>AceJump</li>
+<li>Markdown support</li>
+<li>PlantUML integration</li>
+<li><a href="https://github.com/ZhangYuanSheng1217/RestfulTool">RestfulTool</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/10080-rainbow-brackets">Rainbow Brackets</a></li>
+<li><a href="https://github.com/mars-men/GsonFormatPlus">GsonFormatPlus</a></li>
 </ul>
-<h1 id="Eclipse-上-Git-插件-EGit"><a href="#Eclipse-上-Git-插件-EGit" class="headerlink" title="Eclipse 上 Git 插件 EGit"></a>Eclipse 上 Git 插件 EGit</h1><h2 id="EGit-使用手册"><a href="#EGit-使用手册" class="headerlink" title="EGit 使用手册"></a>EGit 使用手册</h2><ul>
-<li><a href="http://www.open-open.com/lib/view/open1328435419702.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435419702.html">Eclipse 上 GIT 插件 EGIT 使用手册之一_安装 EGIT 插件 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435704515.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435704515.html">Eclipse 上 GIT 插件 EGIT 使用手册之二_使用 EGIT 前的配置 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435726296.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435726296.html">Eclipse 上 GIT 插件 EGIT 使用手册之三_新建 GIT 仓库 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435752656.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435752656.html">Eclipse 上 GIT 插件 EGIT 使用手册之四_配置. gitignore </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435777937.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435777937.html">Eclipse 上 GIT 插件 EGIT 使用手册之五_查看历史记录 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435802187.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435802187.html">Eclipse 上 GIT 插件 EGIT 使用手册之六_远程 GIT 仓库 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435839500.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435839500.html">Eclipse 上 GIT 插件 EGIT 使用手册之七_推送远程仓库 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435861484.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435861484.html">Eclipse 上 GIT 插件 EGIT 使用手册之八_解决推送冲突 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435894375.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435894375.html">Eclipse 上 GIT 插件 EGIT 使用手册之九_Rebase 和 Merge 的区别 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435920046.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435920046.html">Eclipse 上 GIT 插件 EGIT 使用手册之十_Rebase 和 Merge 如何选择的简单解析 </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435965781.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435965781.html">Eclipse 上 GIT 插件 EGIT 使用手册之十一_Fetch 和 Rebase </a></li>
-<li><a href="http://www.open-open.com/lib/view/open1328435992703.html" title="http:&#x2F;&#x2F;www.open-open.com&#x2F;lib&#x2F;view&#x2F;open1328435992703.html">Eclipse 上 GIT 插件 EGIT 使用手册之十二_重置功能 </a></li>
-</ul>
-<h2 id="EGit-User-Gudie"><a href="#EGit-User-Gudie" class="headerlink" title="EGit User Gudie"></a>EGit User Gudie</h2><p><a href="http://wiki.eclipse.org/EGit/User_Guide" title="http:&#x2F;&#x2F;wiki.eclipse.org&#x2F;EGit&#x2F;User_Guide">EGit User Gudie</a></p>
 ]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>Git</category>
-      </categories>
       <tags>
+        <tag>Java</tag>
         <tag>Tools</tag>
-        <tag>Git</tag>
+        <tag>Idea</tag>
       </tags>
   </entry>
   <entry>
@@ -732,44 +923,6 @@
       </tags>
   </entry>
   <entry>
-    <title>IntelliJ IDEA 插件</title>
-    <url>/IdeaPlugins/</url>
-    <content><![CDATA[<blockquote>
-<p>记录自己用的 Idea 插件</p>
-</blockquote>
-<ul>
-<li>Maven Helper</li>
-<li>SonarLint</li>
-<li>Alibaba Java Coding Guidelines</li>
-<li>AceJump</li>
-<li>Markdown support</li>
-<li>PlantUML integration</li>
-<li><a href="https://github.com/ZhangYuanSheng1217/RestfulTool">RestfulTool</a></li>
-<li><a href="https://plugins.jetbrains.com/plugin/10080-rainbow-brackets">Rainbow Brackets</a></li>
-<li><a href="https://github.com/mars-men/GsonFormatPlus">GsonFormatPlus</a></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>Java</tag>
-        <tag>Tools</tag>
-        <tag>Idea</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Gradle 入门</title>
-    <url>/GradleStart/</url>
-    <content><![CDATA[<h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p>下载及配置都可以在 Gradle 官网找到<a href="http://gradle.org/" title="http:&#x2F;&#x2F;gradle.org&#x2F;">http://gradle.org/</a></p>
-<h1 id="中文介绍"><a href="#中文介绍" class="headerlink" title="中文介绍"></a>中文介绍</h1><p>来自 “博客园” 的一份中文介绍，<a href="http://www.cnblogs.com/CloudTeng/p/3417762.html" title="Gradle 系列学习">Gradle 系列学习</a>	</p>
-]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>Gradle</category>
-      </categories>
-      <tags>
-        <tag>Gradle</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java Lambda</title>
     <url>/Java%20Lambda/</url>
     <content><![CDATA[<h2 id="Lambda-示例"><a href="#Lambda-示例" class="headerlink" title="Lambda 示例"></a>Lambda 示例</h2><p>源码来源: <a href="https://github.com/iluwatar/java-design-patterns/tree/master/factory-kit">Github java-design-patterns&#x2F;factory-kit</a></p>
@@ -820,71 +973,45 @@
       </tags>
   </entry>
   <entry>
-    <title>MarkDownPad Pro 体验</title>
-    <url>/MarkDownPad-Pro-experience/</url>
-    <content><![CDATA[<h1 id="About-MarkDownPad"><a href="#About-MarkDownPad" class="headerlink" title="About MarkDownPad"></a>About MarkDownPad</h1><p>Markdown 是一种轻量级标记语言，创始人为 John Gruber 和 Aaron Swartz。它允许人们 “使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML&#x2F;HTML 文档。</p>
-<p><a href="https://markdownpad.com/" title="https:&#x2F;&#x2F;markdownpad.com&#x2F;">MarkDownPad 官网</a></p>
-<span id="more"></span>
-
-<h1 id="MarkDownPad-Pro"><a href="#MarkDownPad-Pro" class="headerlink" title="MarkDownPad Pro"></a>MarkDownPad Pro</h1><p>一直用的免费版的，手痒，给升级了下，体验体验新功能。</p>
-<p><a href="http://markdownpad.com/compare.html">免费版和 Pro 版的区别</a></p>
-<h2 id="Auto-save"><a href="#Auto-save" class="headerlink" title="Auto-save"></a>Auto-save</h2><p><code>Ctrl+S</code> 早已深入骨髓，无所谓了。  </p>
-<h2 id="PDF-export"><a href="#PDF-export" class="headerlink" title="PDF export"></a>PDF export</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/Pu3hAL3.png" alt="自动保存和导出 PDF"></p>
-<h2 id="Built-in-image-uploader"><a href="#Built-in-image-uploader" class="headerlink" title="Built-in image uploader"></a>Built-in image uploader</h2><p>实际上使用的是 <a href="http://imgur.com/" title="http:&#x2F;&#x2F;imgur.com&#x2F;">imgur</a></p>
-<p>效果如下，可以很方便得上传图片。** 水印 ** 什么的 ( ^_^ )&#x2F;~~ 拜拜</p>
-<p>*** 这是我觉得最最实用的功能！！***</p>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/Cc3iC1I.png" alt="Built-in Image uploader"></p>
-<h2 id="Markdown-Tables"><a href="#Markdown-Tables" class="headerlink" title="Markdown Tables"></a>Markdown Tables</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/XXDpAAS.png" alt="table"></p>
-<p>可惜 <code>Hexo</code> 不支持</p>
-<table>
-<thead>
-<tr>
-<th>First Header</th>
-<th>Second Header</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Content Cell</td>
-<td>Content Cell</td>
-</tr>
-<tr>
-<td>Content Cell</td>
-<td>Content Cell</td>
-</tr>
-</tbody></table>
-<h2 id="Fenced-Code-Blocks"><a href="#Fenced-Code-Blocks" class="headerlink" title="Fenced Code Blocks"></a>Fenced Code Blocks</h2><p>Here’s an example:</p>
-<ul>
-<li>Java</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">function <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  console.log(<span class="string">&quot;notice the blank line before this function?&quot;</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>ruby</li>
-</ul>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;redcarpet&#x27;</span></span><br><span class="line">markdown = <span class="title class_">Redcarpet</span>.new(<span class="string">&quot;Hello World!&quot;</span>)</span><br><span class="line">puts markdown.to_html</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/NAWxeoz.png"></p>
-<h2 id="Code-syntax-highlighlighting-in-rendered-HTML-Included-with-GitHub-Flavored-Markdown"><a href="#Code-syntax-highlighlighting-in-rendered-HTML-Included-with-GitHub-Flavored-Markdown" class="headerlink" title="Code syntax highlighlighting in rendered HTML(Included with GitHub Flavored Markdown)"></a>Code syntax highlighlighting in rendered HTML(Included with GitHub Flavored Markdown)</h2><p>凑数的</p>
-<h2 id="GitHub-Flavored-Markdown-support"><a href="#GitHub-Flavored-Markdown-support" class="headerlink" title="GitHub Flavored Markdown support"></a>GitHub Flavored Markdown support</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/cEetjy4.png" alt="Github Markdown Support"></p>
-<h2 id="Markdown-Extra-support"><a href="#Markdown-Extra-support" class="headerlink" title="Markdown Extra support"></a>Markdown Extra support</h2><p><a href="https://michelf.ca/projects/php-markdown/extra/" title="https:&#x2F;&#x2F;michelf.ca&#x2F;projects&#x2F;php-markdown&#x2F;extra&#x2F;">Markdown Extra</a></p>
-<h2 id="Custom-HTML-Head-content"><a href="#Custom-HTML-Head-content" class="headerlink" title="Custom HTML Head content"></a>Custom HTML Head content</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/8AFHmE5.png"></p>
-<h2 id="Session-manager"><a href="#Session-manager" class="headerlink" title="Session manager"></a>Session manager</h2><p>可以快速回退到以前的版本，跟 <code>Tag / 标签 </code> 差不多。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/kdjswdO.png" alt="Session Manager"></p>
-<h2 id="Automatically-restore-previous-session"><a href="#Automatically-restore-previous-session" class="headerlink" title="Automatically restore previous session"></a>Automatically restore previous session</h2><p>又是来凑数的</p>
-<h2 id="Configurable-automatic-update-schedule"><a href="#Configurable-automatic-update-schedule" class="headerlink" title="Configurable automatic update schedule"></a>Configurable automatic update schedule</h2><pre><code>TODO
-</code></pre>
-<h2 id="Early-access-to-new-features"><a href="#Early-access-to-new-features" class="headerlink" title="Early access to new features"></a>Early access to new features</h2><p>免费测试吧</p>
-<h2 id="Commercial-Use"><a href="#Commercial-Use" class="headerlink" title="Commercial Use"></a>Commercial Use</h2><p>个人用户。</p>
-<h2 id="Support-the-developer"><a href="#Support-the-developer" class="headerlink" title="Support the developer"></a>Support the developer</h2><pre><code>TODO
-</code></pre>
+    <title>Gradle 入门</title>
+    <url>/GradleStart/</url>
+    <content><![CDATA[<h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p>下载及配置都可以在 Gradle 官网找到<a href="http://gradle.org/" title="http:&#x2F;&#x2F;gradle.org&#x2F;">http://gradle.org/</a></p>
+<h1 id="中文介绍"><a href="#中文介绍" class="headerlink" title="中文介绍"></a>中文介绍</h1><p>来自 “博客园” 的一份中文介绍，<a href="http://www.cnblogs.com/CloudTeng/p/3417762.html" title="Gradle 系列学习">Gradle 系列学习</a>	</p>
 ]]></content>
       <categories>
         <category>Tools</category>
-        <category>MarkDownPad</category>
+        <category>Gradle</category>
       </categories>
       <tags>
-        <tag>Tools</tag>
-        <tag>MarkDownPad</tag>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Mac 常用设置</title>
+    <url>/MacSettings/</url>
+    <content><![CDATA[<h4 id="fn-设置"><a href="#fn-设置" class="headerlink" title="fn 设置"></a>fn 设置</h4><blockquote>
+<p>勾选 ‘将 F1、F2 等键用作标准功能键’，否则 IDE 中各种快捷键都要加上 fn</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/TXVyWsK.jpg"></p>
+<blockquote>
+<p>MacOs Ventura 版本 可以直接搜索 ‘功能键’ 查找</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/20230615174835-fn.png"></p>
+<h4 id="触摸板设置"><a href="#触摸板设置" class="headerlink" title="触摸板设置"></a>触摸板设置</h4><blockquote>
+<p>勾选 ‘轻点来点按’，可以省下不少力气</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/SNEx6no.jpg"></p>
+<h4 id="触发角设置待机"><a href="#触发角设置待机" class="headerlink" title="触发角设置待机"></a>触发角设置待机</h4><blockquote>
+<p>系统偏好配置 -&gt; 桌面与屏幕保护程序 -&gt; 触发角  </p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/KG6WSr0.jpg"></p>
+<h4 id="显示文件扩展名"><a href="#显示文件扩展名" class="headerlink" title="显示文件扩展名"></a>显示文件扩展名</h4><blockquote>
+<p>访达 &gt; 设置 &gt; 高级 &gt; 显示所有文件扩展名</p>
+</blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/20230619145431-finder.png"></p>
+]]></content>
+      <tags>
+        <tag>Mac</tag>
       </tags>
   </entry>
   <entry>
@@ -986,6 +1113,143 @@
       <tags>
         <tag>Tools</tag>
         <tag>Mac</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java Web Servlet Basic</title>
+    <url>/JavaWebServletBasic/</url>
+    <content><![CDATA[<h2 id="什么是-Servlet"><a href="#什么是-Servlet" class="headerlink" title="什么是 Servlet"></a>什么是 Servlet</h2><p>我们在网上浏览网页，需要一个 web 服务器，浏览网页的过程就是浏览器通过 HTTP 协议与 WEB 服务器 交互的过程。<br>在过去，大多是静态网页，因此只须把资源放在 WEB 服务器上即可。如今随着应用的发展，客户与服务器需要动态的交互，为了实现这一目标，就需 要开发一个遵循 HTTP 协议的服务器端应用软件，来处理各种请求。<br>那么 servlet 是一个基于 java 技术的 WEB 组件，运行在服务器端，我们利用 sevlet 可以很轻松的扩展 WEB 服务器的功能，使它满足特定的应用需要。<br>servlet 由 servlet 容器管理，servlet 容器也叫 servlet 引擎，是 servlet 的运行环境，给发送的请求和响应之上提供网络服务。比如 tomcat 就是我们常用的一个 servlet 容器，其接受 客户端并做出响应的步骤如下：</p>
+<ol>
+<li><p>客户端发送请求至服务器端；</p>
+</li>
+<li><p>服务器将请求信息发送至 Servlet；</p>
+</li>
+<li><p>Servlet 生成响应内容并将其传给服务器。响应内容动态生成，通常取决于客户端的请求；</p>
+</li>
+<li><p>服务器将响应返回给客户端。</p>
+</li>
+</ol>
+<span id="more"></span>
+
+<h2 id="最简单的-Servlet-结构"><a href="#最简单的-Servlet-结构" class="headerlink" title="最简单的 Servlet 结构"></a>最简单的 Servlet 结构</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/qq7WxEp.png" alt="Servlet 结构"></p>
+<h3 id="servlet-api-jar"><a href="#servlet-api-jar" class="headerlink" title="servlet-api.jar"></a>servlet-api.jar</h3><p>运行 Servlet 服务的基础包</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/i9qVnGI.png"></p>
+<h3 id="web-xml"><a href="#web-xml" class="headerlink" title="web.xml"></a>web.xml</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;web-app&gt;</span><br><span class="line">	&lt;!-- filters --&gt;</span><br><span class="line">	&lt;filter&gt;</span><br><span class="line">		&lt;filter-name&gt;helloFilter&lt;/filter-name&gt;</span><br><span class="line">		&lt;filter-class&gt;demo.HelloFilter&lt;/filter-class&gt;</span><br><span class="line">	&lt;/filter&gt;</span><br><span class="line"></span><br><span class="line">	&lt;filter-mapping&gt;</span><br><span class="line">		&lt;filter-name&gt;helloFilter&lt;/filter-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">	&lt;/filter-mapping&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- servlets --&gt;</span><br><span class="line">	&lt;servlet&gt;</span><br><span class="line">		&lt;servlet-name&gt;hello_world&lt;/servlet-name&gt;</span><br><span class="line">		&lt;servlet-class&gt;demo.HelloServlet&lt;/servlet-class&gt;</span><br><span class="line">		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span><br><span class="line">	&lt;/servlet&gt;</span><br><span class="line"></span><br><span class="line">	&lt;servlet-mapping&gt;</span><br><span class="line">		&lt;servlet-name&gt;hello_world&lt;/servlet-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;/hello&lt;/url-pattern&gt;</span><br><span class="line">	&lt;/servlet-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="HelloFilter-java"><a href="#HelloFilter-java" class="headerlink" title="HelloFilter.java"></a>HelloFilter.java</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig arg0)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;Filter 初始化 & quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest req, ServletResponse res, FilterChain chain)</span> <span class="keyword">throws</span> IOException,</span><br><span class="line">			ServletException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="type">HttpServletRequest</span> <span class="variable">request</span> <span class="operator">=</span> (HttpServletRequest) req;</span><br><span class="line">		System.out.println(<span class="string">&quot; 拦截 URI=&quot;</span> + request.getRequestURI());</span><br><span class="line">		chain.doFilter(req, res);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;Filter 结束 & quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="HelloServlet-java"><a href="#HelloServlet-java" class="headerlink" title="HelloServlet.java"></a>HelloServlet.java</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">service</span><span class="params">(HttpServletRequest req, HttpServletResponse res)</span></span><br><span class="line">			<span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">		</span><br><span class="line">		res.getWriter().println(<span class="string">&quot;Hello World! reqUrl=&quot;</span> + req.getRequestURI());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><ul>
+<li>页面</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/7ueRJMO.png"></p>
+<ul>
+<li>控制台</li>
+</ul>
+<blockquote>
+<p>……… 省略<br><strong>Filter 初始化 **<br>三月 19, 2015 11:43:35 上午 org.apache.coyote.AbstractProtocol start<br>信息: Starting ProtocolHandler [“http-nio-8080”]<br>三月 19, 2015 11:43:35 上午 org.apache.coyote.AbstractProtocol start<br>信息: Starting ProtocolHandler [“ajp-nio-8009”]<br>三月 19, 2015 11:43:35 上午 org.apache.catalina.startup.Catalina start<br>信息: Server startup in 1458 ms<br>** 拦截 URI&#x3D;&#x2F;corning.test.servlet_basic&#x2F;<br>拦截 URI&#x3D;&#x2F;corning.test.servlet_basic&#x2F;hello</strong>  </p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>Servlet</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Servlet</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MarkDownPad Pro 体验</title>
+    <url>/MarkDownPad-Pro-experience/</url>
+    <content><![CDATA[<h1 id="About-MarkDownPad"><a href="#About-MarkDownPad" class="headerlink" title="About MarkDownPad"></a>About MarkDownPad</h1><p>Markdown 是一种轻量级标记语言，创始人为 John Gruber 和 Aaron Swartz。它允许人们 “使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML&#x2F;HTML 文档。</p>
+<p><a href="https://markdownpad.com/" title="https:&#x2F;&#x2F;markdownpad.com&#x2F;">MarkDownPad 官网</a></p>
+<span id="more"></span>
+
+<h1 id="MarkDownPad-Pro"><a href="#MarkDownPad-Pro" class="headerlink" title="MarkDownPad Pro"></a>MarkDownPad Pro</h1><p>一直用的免费版的，手痒，给升级了下，体验体验新功能。</p>
+<p><a href="http://markdownpad.com/compare.html">免费版和 Pro 版的区别</a></p>
+<h2 id="Auto-save"><a href="#Auto-save" class="headerlink" title="Auto-save"></a>Auto-save</h2><p><code>Ctrl+S</code> 早已深入骨髓，无所谓了。  </p>
+<h2 id="PDF-export"><a href="#PDF-export" class="headerlink" title="PDF export"></a>PDF export</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/Pu3hAL3.png" alt="自动保存和导出 PDF"></p>
+<h2 id="Built-in-image-uploader"><a href="#Built-in-image-uploader" class="headerlink" title="Built-in image uploader"></a>Built-in image uploader</h2><p>实际上使用的是 <a href="http://imgur.com/" title="http:&#x2F;&#x2F;imgur.com&#x2F;">imgur</a></p>
+<p>效果如下，可以很方便得上传图片。** 水印 ** 什么的 ( ^_^ )&#x2F;~~ 拜拜</p>
+<p>*** 这是我觉得最最实用的功能！！***</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/Cc3iC1I.png" alt="Built-in Image uploader"></p>
+<h2 id="Markdown-Tables"><a href="#Markdown-Tables" class="headerlink" title="Markdown Tables"></a>Markdown Tables</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/XXDpAAS.png" alt="table"></p>
+<p>可惜 <code>Hexo</code> 不支持</p>
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+</tbody></table>
+<h2 id="Fenced-Code-Blocks"><a href="#Fenced-Code-Blocks" class="headerlink" title="Fenced Code Blocks"></a>Fenced Code Blocks</h2><p>Here’s an example:</p>
+<ul>
+<li>Java</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">function <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">  console.log(<span class="string">&quot;notice the blank line before this function?&quot;</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ruby</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">&#x27;redcarpet&#x27;</span></span><br><span class="line">markdown = <span class="title class_">Redcarpet</span>.new(<span class="string">&quot;Hello World!&quot;</span>)</span><br><span class="line">puts markdown.to_html</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/NAWxeoz.png"></p>
+<h2 id="Code-syntax-highlighlighting-in-rendered-HTML-Included-with-GitHub-Flavored-Markdown"><a href="#Code-syntax-highlighlighting-in-rendered-HTML-Included-with-GitHub-Flavored-Markdown" class="headerlink" title="Code syntax highlighlighting in rendered HTML(Included with GitHub Flavored Markdown)"></a>Code syntax highlighlighting in rendered HTML(Included with GitHub Flavored Markdown)</h2><p>凑数的</p>
+<h2 id="GitHub-Flavored-Markdown-support"><a href="#GitHub-Flavored-Markdown-support" class="headerlink" title="GitHub Flavored Markdown support"></a>GitHub Flavored Markdown support</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/cEetjy4.png" alt="Github Markdown Support"></p>
+<h2 id="Markdown-Extra-support"><a href="#Markdown-Extra-support" class="headerlink" title="Markdown Extra support"></a>Markdown Extra support</h2><p><a href="https://michelf.ca/projects/php-markdown/extra/" title="https:&#x2F;&#x2F;michelf.ca&#x2F;projects&#x2F;php-markdown&#x2F;extra&#x2F;">Markdown Extra</a></p>
+<h2 id="Custom-HTML-Head-content"><a href="#Custom-HTML-Head-content" class="headerlink" title="Custom HTML Head content"></a>Custom HTML Head content</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/8AFHmE5.png"></p>
+<h2 id="Session-manager"><a href="#Session-manager" class="headerlink" title="Session manager"></a>Session manager</h2><p>可以快速回退到以前的版本，跟 <code>Tag / 标签 </code> 差不多。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/kdjswdO.png" alt="Session Manager"></p>
+<h2 id="Automatically-restore-previous-session"><a href="#Automatically-restore-previous-session" class="headerlink" title="Automatically restore previous session"></a>Automatically restore previous session</h2><p>又是来凑数的</p>
+<h2 id="Configurable-automatic-update-schedule"><a href="#Configurable-automatic-update-schedule" class="headerlink" title="Configurable automatic update schedule"></a>Configurable automatic update schedule</h2><pre><code>TODO
+</code></pre>
+<h2 id="Early-access-to-new-features"><a href="#Early-access-to-new-features" class="headerlink" title="Early access to new features"></a>Early access to new features</h2><p>免费测试吧</p>
+<h2 id="Commercial-Use"><a href="#Commercial-Use" class="headerlink" title="Commercial Use"></a>Commercial Use</h2><p>个人用户。</p>
+<h2 id="Support-the-developer"><a href="#Support-the-developer" class="headerlink" title="Support the developer"></a>Support the developer</h2><pre><code>TODO
+</code></pre>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>MarkDownPad</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+        <tag>MarkDownPad</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SonarQube 过滤器使用说明</title>
+    <url>/SonarQubeFilters/</url>
+    <content><![CDATA[<h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>使用 SonarQube 管理项目，当项目太多时，管理会非常困难。需要对项目进行自定义分组管理。</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-061949.jpg-o"></p>
+<span id="more"></span>
+
+<h2 id="一、管理员添加过滤器"><a href="#一、管理员添加过滤器" class="headerlink" title="一、管理员添加过滤器"></a>一、管理员添加过滤器</h2><h3 id="1-新建搜索"><a href="#1-新建搜索" class="headerlink" title="1. 新建搜索"></a>1. 新建搜索</h3><h3 id="2-设置条件"><a href="#2-设置条件" class="headerlink" title="2. 设置条件"></a>2. 设置条件</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063149.jpg-o"></p>
+<h3 id="3-另存为，并设置为共享给所有用户"><a href="#3-另存为，并设置为共享给所有用户" class="headerlink" title="3. 另存为，并设置为共享给所有用户"></a>3. 另存为，并设置为共享给所有用户</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063637.jpg-o"></p>
+<h2 id="二、普通用户从所有过滤器中选择自己需要的"><a href="#二、普通用户从所有过滤器中选择自己需要的" class="headerlink" title="二、普通用户从所有过滤器中选择自己需要的"></a>二、普通用户从所有过滤器中选择自己需要的</h2><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063926.jpg-o"></p>
+<h2 id="三、过滤器使用效果图"><a href="#三、过滤器使用效果图" class="headerlink" title="三、过滤器使用效果图"></a>三、过滤器使用效果图</h2><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-064046.jpg-o"></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="1-普通用户也可以自定义过滤器，但无法共享给其他用户"><a href="#1-普通用户也可以自定义过滤器，但无法共享给其他用户" class="headerlink" title="1. 普通用户也可以自定义过滤器，但无法共享给其他用户"></a>1. 普通用户也可以自定义过滤器，但无法共享给其他用户</h3><h3 id="2-过滤器除了可以过滤项目，还可以自定义显示的列和顺序"><a href="#2-过滤器除了可以过滤项目，还可以自定义显示的列和顺序" class="headerlink" title="2. 过滤器除了可以过滤项目，还可以自定义显示的列和顺序"></a>2. 过滤器除了可以过滤项目，还可以自定义显示的列和顺序</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-064345.jpg-o"></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>SonarQube</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+        <tag>SonarQube</tag>
       </tags>
   </entry>
   <entry>
@@ -1158,56 +1422,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SonarQube 过滤器使用说明</title>
-    <url>/SonarQubeFilters/</url>
-    <content><![CDATA[<h1 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h1><p>使用 SonarQube 管理项目，当项目太多时，管理会非常困难。需要对项目进行自定义分组管理。</p>
-<p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-061949.jpg-o"></p>
-<span id="more"></span>
-
-<h2 id="一、管理员添加过滤器"><a href="#一、管理员添加过滤器" class="headerlink" title="一、管理员添加过滤器"></a>一、管理员添加过滤器</h2><h3 id="1-新建搜索"><a href="#1-新建搜索" class="headerlink" title="1. 新建搜索"></a>1. 新建搜索</h3><h3 id="2-设置条件"><a href="#2-设置条件" class="headerlink" title="2. 设置条件"></a>2. 设置条件</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063149.jpg-o"></p>
-<h3 id="3-另存为，并设置为共享给所有用户"><a href="#3-另存为，并设置为共享给所有用户" class="headerlink" title="3. 另存为，并设置为共享给所有用户"></a>3. 另存为，并设置为共享给所有用户</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063637.jpg-o"></p>
-<h2 id="二、普通用户从所有过滤器中选择自己需要的"><a href="#二、普通用户从所有过滤器中选择自己需要的" class="headerlink" title="二、普通用户从所有过滤器中选择自己需要的"></a>二、普通用户从所有过滤器中选择自己需要的</h2><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-063926.jpg-o"></p>
-<h2 id="三、过滤器使用效果图"><a href="#三、过滤器使用效果图" class="headerlink" title="三、过滤器使用效果图"></a>三、过滤器使用效果图</h2><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-064046.jpg-o"></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="1-普通用户也可以自定义过滤器，但无法共享给其他用户"><a href="#1-普通用户也可以自定义过滤器，但无法共享给其他用户" class="headerlink" title="1. 普通用户也可以自定义过滤器，但无法共享给其他用户"></a>1. 普通用户也可以自定义过滤器，但无法共享给其他用户</h3><h3 id="2-过滤器除了可以过滤项目，还可以自定义显示的列和顺序"><a href="#2-过滤器除了可以过滤项目，还可以自定义显示的列和顺序" class="headerlink" title="2. 过滤器除了可以过滤项目，还可以自定义显示的列和顺序"></a>2. 过滤器除了可以过滤项目，还可以自定义显示的列和顺序</h3><p><img src="http://corningsun.qiniudn.com/blog/2017-02-28-064345.jpg-o"></p>
-]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>SonarQube</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
-        <tag>SonarQube</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Mac 常用设置</title>
-    <url>/MacSettings/</url>
-    <content><![CDATA[<h4 id="fn-设置"><a href="#fn-设置" class="headerlink" title="fn 设置"></a>fn 设置</h4><blockquote>
-<p>勾选 ‘将 F1、F2 等键用作标准功能键’，否则 IDE 中各种快捷键都要加上 fn</p>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/TXVyWsK.jpg"></p>
-<blockquote>
-<p>MacOs Ventura 版本 可以直接搜索 ‘功能键’ 查找</p>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/20230615174835-fn.png"></p>
-<h4 id="触摸板设置"><a href="#触摸板设置" class="headerlink" title="触摸板设置"></a>触摸板设置</h4><blockquote>
-<p>勾选 ‘轻点来点按’，可以省下不少力气</p>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/SNEx6no.jpg"></p>
-<h4 id="触发角设置待机"><a href="#触发角设置待机" class="headerlink" title="触发角设置待机"></a>触发角设置待机</h4><blockquote>
-<p>系统偏好配置 -&gt; 桌面与屏幕保护程序 -&gt; 触发角  </p>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/KG6WSr0.jpg"></p>
-<h4 id="显示文件扩展名"><a href="#显示文件扩展名" class="headerlink" title="显示文件扩展名"></a>显示文件扩展名</h4><blockquote>
-<p>访达 &gt; 设置 &gt; 高级 &gt; 显示所有文件扩展名</p>
-</blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/20230619145431-finder.png"></p>
-]]></content>
-      <tags>
-        <tag>Mac</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>时间是把杀猪刀</title>
     <url>/TimeIsAFileThatWearsAndMakesNoNoise/</url>
     <content><![CDATA[<p><img src="http://corningsun.qiniudn.com/blog/2017-02-13-%E6%97%B6%E9%97%B4%E6%98%AF%E6%8A%8A%E6%9D%80%E7%8C%AA%E5%88%80---3.jpg-o"></p>
@@ -1219,6 +1433,58 @@
       <tags>
         <tag>杂文</tag>
         <tag>Me</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Wicket 入门</title>
+    <url>/WicketStart/</url>
+    <content><![CDATA[<h1 id="About-Wicket"><a href="#About-Wicket" class="headerlink" title="About Wicket"></a>About Wicket</h1><blockquote>
+<p>With proper mark-up&#x2F;logic separation, a POJO data model, and a refreshing lack of XML, Apache Wicket makes developing web-apps simple and enjoyable again. Swap the boilerplate, complex debugging and brittle code for powerful, reusable components written with plain Java and HTML.</p>
+</blockquote>
+<span id="more"></span>
+
+<IFRAME src="http://wicket.apache.org/meet/introduction.html"></IFRAME>
+
+
+<h1 id="Learn"><a href="#Learn" class="headerlink" title="Learn"></a>Learn</h1><h2 id="Wicket-官网"><a href="#Wicket-官网" class="headerlink" title="Wicket 官网"></a>Wicket 官网</h2><p><a href="http://wicket.apache.org/" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;">Wicket 官网</a>中有非常详细的介绍，包括： </p>
+<ul>
+<li><a href="http://wicket.apache.org/start/quickstart.html">快速开始</a><br>教你使用 Maven 下载一个 Hello World 源代码，并导入 Eclipse 中。</li>
+<li><strong><a href="http://wicket.apache.org/guide/guide/introduction.html" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;guide&#x2F;guide&#x2F;introduction.html">使用指南</a></strong><br>使用指南里有很多 Wicket 示例代码，下载后可以直接导入 Eclipse 里，非常方便。</li>
+<li><a href="http://wicket.apache.org/start/download.html">Wicket 下载</a><br>包含所有版本的 Wicket，可以下载 JAR 包，也可以添加 Maven 依赖。</li>
+<li><a href="http://wicket.apache.org/learn/examples/">Examples</a></li>
+<li><a href="http://www.wicket-library.com/wicket-examples/compref/">Components</a><br>Wicket 中一些组件，包括文本框、链接、表单等的使用说明。</li>
+<li><a href="http://ci.apache.org/projects/wicket/apidocs/6.x/">Wicket6.X API</a></li>
+<li>…</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><a href="http://www.doc88.com/p-797379106636.html" title="http:&#x2F;&#x2F;www.doc88.com&#x2F;p-797379106636.html">Wicket 开发指南 - 简体中文版</a></p>
+<p><code>\\192.168.41.205\100.temp\Test\Wicket 参考资料 </code></p>
+<p>*Wicket 开发指南 * 等资料中使用的 Wicket 版本都是比较老的，只作为参考。<br>** 强烈建议 ** 只看 <a href="http://wicket.apache.org/" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;">Wicket 官网</a> 中的<a href="http://wicket.apache.org/guide/guide/introduction.html" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;guide&#x2F;guide&#x2F;introduction.html">使用指南</a></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+        <category>Wicket</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Wicket</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Velocity 如何输出 Markdown 标题</title>
+    <url>/Velocity-%E5%A6%82%E4%BD%95%E8%BE%93%E5%87%BA-Markdown-%E6%A0%87%E9%A2%98/</url>
+    <content><![CDATA[<p>试过了 <a href="https://wizardforcel.gitbooks.io/velocity-doc/content/41.html">Velocity 各种转义</a> 也没能找到输出 Markdown 标题的方法，于是干脆将标题设置为自定义为字符串了，具体实现如下：</p>
+<h2 id="Java-代码"><a href="#Java-代码" class="headerlink" title="Java 代码"></a>Java 代码</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.corning.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.velocity.VelocityContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.velocity.app.VelocityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VelocityAnnotationOutput</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">VelocityEngine</span> <span class="variable">ve</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VelocityEngine</span>();</span><br><span class="line">        ve.init();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">readmeWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;demo.txt&quot;</span>))) &#123;</span><br><span class="line">            <span class="type">VelocityContext</span> <span class="variable">context</span> <span class="operator">=</span> getVelocityContextMD();</span><br><span class="line">            context.put(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">            ve.getTemplate(<span class="string">&quot;src/main/resources/templates/demo.vm&quot;</span>).merge(context, readmeWriter);</span><br><span class="line">            readmeWriter.flush();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> VelocityContext <span class="title function_">getVelocityContextMD</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">VelocityContext</span> <span class="variable">context</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VelocityContext</span>();</span><br><span class="line">        context.put(<span class="string">&quot;H1&quot;</span>, <span class="string">&quot;#&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H2&quot;</span>, <span class="string">&quot;##&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H3&quot;</span>, <span class="string">&quot;###&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H4&quot;</span>, <span class="string">&quot;####&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H5&quot;</span>, <span class="string">&quot;#####&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Velocity-模版"><a href="#Velocity-模版" class="headerlink" title="Velocity 模版"></a>Velocity 模版</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$H1 $msg</span><br><span class="line">$H2 $msg</span><br><span class="line">$H3 $msg</span><br><span class="line">$H4 $msg</span><br><span class="line">$H5 $msg</span><br></pre></td></tr></table></figure>
+
+<h2 id="模版输出结果"><a href="#模版输出结果" class="headerlink" title="模版输出结果"></a>模版输出结果</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section"># Hello World!</span></span><br><span class="line"><span class="section">## Hello World!</span></span><br><span class="line"><span class="section">### Hello World!</span></span><br><span class="line"><span class="section">#### Hello World!</span></span><br><span class="line"><span class="section">##### Hello World!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="求问"><a href="#求问" class="headerlink" title="求问"></a>求问</h2><p>还有没有更优雅的方式？</p>
+]]></content>
+      <tags>
+        <tag>Java</tag>
+        <tag>Velocity</tag>
+        <tag>Markdown</tag>
       </tags>
   </entry>
   <entry>
@@ -1247,13 +1513,13 @@
 <li>CVS 路径 - WCLDemo</li>
 </ul>
 <blockquote>
-<p>:pserver:<a href="mailto:&#121;&#111;&#117;&#x72;&#x4e;&#x61;&#109;&#101;&#64;&#x31;&#57;&#x32;&#x2e;&#x31;&#54;&#x38;&#46;&#x31;&#46;&#x31;&#56;&#50;">yourName@192.168.1.182</a>:&#x2F;depcvs&#x2F;platform_training<br>platform_training&#x2F;introTraing&#x2F;demo&#x2F;srq15.wcl.test</p>
+<p>:pserver:<a href="mailto:&#121;&#x6f;&#117;&#x72;&#78;&#x61;&#109;&#x65;&#64;&#49;&#57;&#50;&#x2e;&#x31;&#54;&#x38;&#x2e;&#x31;&#x2e;&#49;&#x38;&#50;">yourName@192.168.1.182</a>:&#x2F;depcvs&#x2F;platform_training<br>platform_training&#x2F;introTraing&#x2F;demo&#x2F;srq15.wcl.test</p>
 </blockquote>
 <ul>
 <li>CVS 路径 - WCL 基础包</li>
 </ul>
 <blockquote>
-<p>:pserver:<a href="mailto:&#x79;&#x6f;&#117;&#114;&#x4e;&#x61;&#109;&#101;&#x40;&#x31;&#57;&#x32;&#x2e;&#49;&#54;&#56;&#x2e;&#x31;&#46;&#49;&#x38;&#50;">yourName@192.168.1.182</a>:&#x2F;cvs&#x2F;prod_PKI<br>framework&#x2F;wcl&#x2F;</p>
+<p>:pserver:<a href="mailto:&#121;&#111;&#117;&#x72;&#x4e;&#x61;&#x6d;&#101;&#x40;&#x31;&#x39;&#50;&#46;&#49;&#x36;&#x38;&#46;&#49;&#46;&#x31;&#56;&#50;">yourName@192.168.1.182</a>:&#x2F;cvs&#x2F;prod_PKI<br>framework&#x2F;wcl&#x2F;</p>
 </blockquote>
 <h2 id="获取-CVS-权限"><a href="#获取-CVS-权限" class="headerlink" title="获取 CVS 权限"></a>获取 CVS 权限</h2><p>提取 CVS 代码需要先在 <code>品质管理部 - 徐英</code> 那获取权限；<br>将自己的 ** 用户名、密码和 CVS 路径 ** 发送给她并说明原因即可。</p>
 <h2 id="Eclipse-新建-CVS-资源库"><a href="#Eclipse-新建-CVS-资源库" class="headerlink" title="Eclipse 新建 CVS 资源库"></a>Eclipse 新建 CVS 资源库</h2><ul>
@@ -1385,100 +1651,6 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
       </tags>
   </entry>
   <entry>
-    <title>About Clover</title>
-    <url>/clover/</url>
-    <content><![CDATA[<p><a href="http://cn.ejie.me/" title="http:&#x2F;&#x2F;cn.ejie.me&#x2F;">Clover</a> 是 ** 易捷科技 ** 开发的一款 Windows Explorer 资源管理器一个扩展，为其增加类似谷歌 Chrome 浏览器的多标签页功能。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/6SWvOI4.jpg"></p>
-<p><a href="http://ejie.me/download" title="http:&#x2F;&#x2F;ejie.me&#x2F;download">Clover 下载</a></p>
-<span id="more"></span>
-
-<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><p>方便的 Tab 页功能</p>
-<p>要掌握功能强大，操作简单的标签页，只需记住 Ctrl+T 新开页面，Ctrl+W 关闭页面，Ctrl+Tab 切换页面，工作效率提高何止一倍！<br>操作系统无缝集成</p>
-<p>Clover 通过插件的形式集成到 Windows Explorer，保留您通常的使用习惯，无需学习新的文件管理操作，马上就可以使用啦。<br>快如闪电的书签栏</p>
-<p>按 Ctrl+D 添加当前路径，或者直接将文件夹拖入书签栏。再也不用到处寻找要访问的文件夹了，瞬间到达，何等痛快！</p>
-<h2 id="使用帮助"><a href="#使用帮助" class="headerlink" title="使用帮助"></a>使用帮助</h2><ul>
-<li>Q: Clover 是否支持 Windows2000 系统？</li>
-</ul>
-<p>A: Clover 目前只支持 Windows XP 及之后各个 Windows 版本 （32bit&#x2F;64bit），同时支持英文和中文等大部分常用语言。</p>
-<ul>
-<li>Q: 安装时 360 安全卫士提示 regsvr32 进程安装浏览器插件，这个软件安全吗？</li>
-</ul>
-<p>A: Clover 通过 Windows Explorer 插件的形式集成到系统资源管理器中，获取资源管理器新开窗口的消息，能够自动将外部打开的资源管理器窗口吸附到 Clover 窗口中。 Clover 程序不会获取用户的任何消息。</p>
-<ul>
-<li>Q: ：安装后会自动吸附 Windows Explorer，但是现在不行了？</li>
-</ul>
-<p>A: 有些用户安装后，通过优化软件禁用了 ExplorerWatcher 插件，会造成这种情况，解除插件的禁用即可（请从 IE 浏览器–&gt; 管理加载项菜单中查看，是否被禁用）。</p>
-<ul>
-<li>Q: 我确认 ExplorerWatcher 已经启用了，为何还是无法自动吸附？</li>
-</ul>
-<p>A: 请检查注册表的下列选项，检查浏览器扩展功能是否被禁用了。<br>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]<br>“Enable Browser Extensions”&#x3D;”yes”</p>
-<ul>
-<li>Q: 您会把 Clover 开源吗?</li>
-</ul>
-<p>A: 很多朋友咨询这个问题，因为以下几个原因，暂时不会:</p>
-<ol>
-<li>代码仓促写就，还有很多问题。</li>
-<li>长期的开发计划和开发方向还不清晰。</li>
-<li>Clover 品牌还不够突出，为避免被山寨，暂时不能公开源码。</li>
-</ol>
-<ul>
-<li>Q: 能不能把任务栏上的 Clover 三叶草图标换回资源管理器的图标？</li>
-</ul>
-<p>A: 有些人不喜欢 Clover 的图标，也有一些人很喜欢。所以我暂时不修改 Clover 的图标，直到我发现一个更好的，或者有人帮我做出一个更漂亮的图标。网友 3man 和 nick 提供了一个图标<br><img src="http://ejie.me/images/Windows_Explorer_Clover.ico" alt="by 3man" title="by 3man"><br>  <img src="http://ejie.me/images/clover3_32.ico" alt="by nick" title="by nick"><br>，你暂时可以用来修改下面这个快捷方式的图标:<br><code>C:\Users\YOUR_USERNAME\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Clover.lnk</code></p>
-<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><table>
-<thead>
-<tr>
-<th>快捷键</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Ctrl + N</td>
-<td>打开一个新的 Clover 窗口。</td>
-</tr>
-<tr>
-<td>Ctrl + T</td>
-<td>新建标签页。</td>
-</tr>
-<tr>
-<td>Ctrl + W</td>
-<td>关闭当前标签页。</td>
-</tr>
-<tr>
-<td>Ctrl + Shift + T</td>
-<td>重新打开关闭的标签页。</td>
-</tr>
-<tr>
-<td>Ctrl + D</td>
-<td>为此页添加书签（有选择文件、文件夹的情况下，是删除文件）。</td>
-</tr>
-<tr>
-<td>Ctrl + Shift + D</td>
-<td>为所有打开的标签页添加书签。</td>
-</tr>
-<tr>
-<td>Ctrl + Tab</td>
-<td>切换到下一个标签页。</td>
-</tr>
-<tr>
-<td>Ctrl + Shift + Tab</td>
-<td>切换到前一个标签页。</td>
-</tr>
-<tr>
-<td>Ctrl + Shift + B</td>
-<td>显示或隐藏书签栏。</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>Clover</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>开发工具整合</title>
     <url>/developTools/</url>
     <content><![CDATA[<p>工欲善其事必先利其器！<br>以下工具中 ** 加粗 ** 的为本人使用，不一定是最好的，可以都尝试下，选择最适合自己的。</p>
@@ -1559,24 +1731,6 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
       </categories>
       <tags>
         <tag>Tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Velocity 如何输出 Markdown 标题</title>
-    <url>/Velocity-%E5%A6%82%E4%BD%95%E8%BE%93%E5%87%BA-Markdown-%E6%A0%87%E9%A2%98/</url>
-    <content><![CDATA[<p>试过了 <a href="https://wizardforcel.gitbooks.io/velocity-doc/content/41.html">Velocity 各种转义</a> 也没能找到输出 Markdown 标题的方法，于是干脆将标题设置为自定义为字符串了，具体实现如下：</p>
-<h2 id="Java-代码"><a href="#Java-代码" class="headerlink" title="Java 代码"></a>Java 代码</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.corning.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.velocity.VelocityContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.velocity.app.VelocityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VelocityAnnotationOutput</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">VelocityEngine</span> <span class="variable">ve</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VelocityEngine</span>();</span><br><span class="line">        ve.init();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">FileWriter</span> <span class="variable">readmeWriter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileWriter</span>(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;demo.txt&quot;</span>))) &#123;</span><br><span class="line">            <span class="type">VelocityContext</span> <span class="variable">context</span> <span class="operator">=</span> getVelocityContextMD();</span><br><span class="line">            context.put(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">            ve.getTemplate(<span class="string">&quot;src/main/resources/templates/demo.vm&quot;</span>).merge(context, readmeWriter);</span><br><span class="line">            readmeWriter.flush();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> VelocityContext <span class="title function_">getVelocityContextMD</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">VelocityContext</span> <span class="variable">context</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VelocityContext</span>();</span><br><span class="line">        context.put(<span class="string">&quot;H1&quot;</span>, <span class="string">&quot;#&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H2&quot;</span>, <span class="string">&quot;##&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H3&quot;</span>, <span class="string">&quot;###&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H4&quot;</span>, <span class="string">&quot;####&quot;</span>);</span><br><span class="line">        context.put(<span class="string">&quot;H5&quot;</span>, <span class="string">&quot;#####&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> context;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="Velocity-模版"><a href="#Velocity-模版" class="headerlink" title="Velocity 模版"></a>Velocity 模版</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$H1 $msg</span><br><span class="line">$H2 $msg</span><br><span class="line">$H3 $msg</span><br><span class="line">$H4 $msg</span><br><span class="line">$H5 $msg</span><br></pre></td></tr></table></figure>
-
-<h2 id="模版输出结果"><a href="#模版输出结果" class="headerlink" title="模版输出结果"></a>模版输出结果</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section"># Hello World!</span></span><br><span class="line"><span class="section">## Hello World!</span></span><br><span class="line"><span class="section">### Hello World!</span></span><br><span class="line"><span class="section">#### Hello World!</span></span><br><span class="line"><span class="section">##### Hello World!</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="求问"><a href="#求问" class="headerlink" title="求问"></a>求问</h2><p>还有没有更优雅的方式？</p>
-]]></content>
-      <tags>
-        <tag>Java</tag>
-        <tag>Velocity</tag>
-        <tag>Markdown</tag>
       </tags>
   </entry>
   <entry>
@@ -1788,40 +1942,6 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
       </tags>
   </entry>
   <entry>
-    <title>Wicket 入门</title>
-    <url>/WicketStart/</url>
-    <content><![CDATA[<h1 id="About-Wicket"><a href="#About-Wicket" class="headerlink" title="About Wicket"></a>About Wicket</h1><blockquote>
-<p>With proper mark-up&#x2F;logic separation, a POJO data model, and a refreshing lack of XML, Apache Wicket makes developing web-apps simple and enjoyable again. Swap the boilerplate, complex debugging and brittle code for powerful, reusable components written with plain Java and HTML.</p>
-</blockquote>
-<span id="more"></span>
-
-<IFRAME src="http://wicket.apache.org/meet/introduction.html"></IFRAME>
-
-
-<h1 id="Learn"><a href="#Learn" class="headerlink" title="Learn"></a>Learn</h1><h2 id="Wicket-官网"><a href="#Wicket-官网" class="headerlink" title="Wicket 官网"></a>Wicket 官网</h2><p><a href="http://wicket.apache.org/" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;">Wicket 官网</a>中有非常详细的介绍，包括： </p>
-<ul>
-<li><a href="http://wicket.apache.org/start/quickstart.html">快速开始</a><br>教你使用 Maven 下载一个 Hello World 源代码，并导入 Eclipse 中。</li>
-<li><strong><a href="http://wicket.apache.org/guide/guide/introduction.html" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;guide&#x2F;guide&#x2F;introduction.html">使用指南</a></strong><br>使用指南里有很多 Wicket 示例代码，下载后可以直接导入 Eclipse 里，非常方便。</li>
-<li><a href="http://wicket.apache.org/start/download.html">Wicket 下载</a><br>包含所有版本的 Wicket，可以下载 JAR 包，也可以添加 Maven 依赖。</li>
-<li><a href="http://wicket.apache.org/learn/examples/">Examples</a></li>
-<li><a href="http://www.wicket-library.com/wicket-examples/compref/">Components</a><br>Wicket 中一些组件，包括文本框、链接、表单等的使用说明。</li>
-<li><a href="http://ci.apache.org/projects/wicket/apidocs/6.x/">Wicket6.X API</a></li>
-<li>…</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><a href="http://www.doc88.com/p-797379106636.html" title="http:&#x2F;&#x2F;www.doc88.com&#x2F;p-797379106636.html">Wicket 开发指南 - 简体中文版</a></p>
-<p><code>\\192.168.41.205\100.temp\Test\Wicket 参考资料 </code></p>
-<p>*Wicket 开发指南 * 等资料中使用的 Wicket 版本都是比较老的，只作为参考。<br>** 强烈建议 ** 只看 <a href="http://wicket.apache.org/" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;">Wicket 官网</a> 中的<a href="http://wicket.apache.org/guide/guide/introduction.html" title="http:&#x2F;&#x2F;wicket.apache.org&#x2F;guide&#x2F;guide&#x2F;introduction.html">使用指南</a></p>
-]]></content>
-      <categories>
-        <category>Java</category>
-        <category>Wicket</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Wicket</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>iPhone 手机证书安装说明</title>
     <url>/iphoneCertsSetting/</url>
     <content><![CDATA[<p>本文描述了，如何在 iPhone 上安装个人证书，以及一些注意事项。</p>
@@ -1860,7 +1980,7 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
 <p>Maven</p>
 <p><code>\\192.168.40.90\Tools\apache-maven-3.1.0</code></p>
 <h2 id="建立-CVS-资源库"><a href="#建立-CVS-资源库" class="headerlink" title="建立 CVS 资源库"></a>建立 CVS 资源库</h2><blockquote>
-<p>:pserver:<a href="mailto:&#x79;&#111;&#x75;&#x72;&#78;&#x61;&#x6d;&#101;&#x40;&#49;&#57;&#50;&#46;&#49;&#x36;&#x38;&#x2e;&#49;&#x2e;&#x31;&#x38;&#x32;">yourName@192.168.1.182</a>:&#x2F;depcvs&#x2F;platform_training<br>platform_training&#x2F;demo&#x2F;wicket&#x2F;HelloWorldExample</p>
+<p>:pserver:<a href="mailto:&#x79;&#x6f;&#x75;&#x72;&#78;&#x61;&#x6d;&#x65;&#x40;&#x31;&#x39;&#50;&#x2e;&#x31;&#x36;&#56;&#46;&#49;&#x2e;&#49;&#56;&#50;">yourName@192.168.1.182</a>:&#x2F;depcvs&#x2F;platform_training<br>platform_training&#x2F;demo&#x2F;wicket&#x2F;HelloWorldExample</p>
 </blockquote>
 <p>在 CVS 中添加资源库方法请参考：<a href="http://corningsun.gitcafe.io/2015/03/17/WCL%E5%85%A5%E9%97%A8/">WCL 入门</a></p>
 <h2 id="从-CVS-中-Checkout"><a href="#从-CVS-中-Checkout" class="headerlink" title="从 CVS 中 Checkout"></a>从 CVS 中 Checkout</h2><ul>
@@ -1920,152 +2040,6 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
         <tag>Java</tag>
         <tag>Wicket</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Java Web Servlet Basic</title>
-    <url>/JavaWebServletBasic/</url>
-    <content><![CDATA[<h2 id="什么是-Servlet"><a href="#什么是-Servlet" class="headerlink" title="什么是 Servlet"></a>什么是 Servlet</h2><p>我们在网上浏览网页，需要一个 web 服务器，浏览网页的过程就是浏览器通过 HTTP 协议与 WEB 服务器 交互的过程。<br>在过去，大多是静态网页，因此只须把资源放在 WEB 服务器上即可。如今随着应用的发展，客户与服务器需要动态的交互，为了实现这一目标，就需 要开发一个遵循 HTTP 协议的服务器端应用软件，来处理各种请求。<br>那么 servlet 是一个基于 java 技术的 WEB 组件，运行在服务器端，我们利用 sevlet 可以很轻松的扩展 WEB 服务器的功能，使它满足特定的应用需要。<br>servlet 由 servlet 容器管理，servlet 容器也叫 servlet 引擎，是 servlet 的运行环境，给发送的请求和响应之上提供网络服务。比如 tomcat 就是我们常用的一个 servlet 容器，其接受 客户端并做出响应的步骤如下：</p>
-<ol>
-<li><p>客户端发送请求至服务器端；</p>
-</li>
-<li><p>服务器将请求信息发送至 Servlet；</p>
-</li>
-<li><p>Servlet 生成响应内容并将其传给服务器。响应内容动态生成，通常取决于客户端的请求；</p>
-</li>
-<li><p>服务器将响应返回给客户端。</p>
-</li>
-</ol>
-<span id="more"></span>
-
-<h2 id="最简单的-Servlet-结构"><a href="#最简单的-Servlet-结构" class="headerlink" title="最简单的 Servlet 结构"></a>最简单的 Servlet 结构</h2><p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/qq7WxEp.png" alt="Servlet 结构"></p>
-<h3 id="servlet-api-jar"><a href="#servlet-api-jar" class="headerlink" title="servlet-api.jar"></a>servlet-api.jar</h3><p>运行 Servlet 服务的基础包</p>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/i9qVnGI.png"></p>
-<h3 id="web-xml"><a href="#web-xml" class="headerlink" title="web.xml"></a>web.xml</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;web-app&gt;</span><br><span class="line">	&lt;!-- filters --&gt;</span><br><span class="line">	&lt;filter&gt;</span><br><span class="line">		&lt;filter-name&gt;helloFilter&lt;/filter-name&gt;</span><br><span class="line">		&lt;filter-class&gt;demo.HelloFilter&lt;/filter-class&gt;</span><br><span class="line">	&lt;/filter&gt;</span><br><span class="line"></span><br><span class="line">	&lt;filter-mapping&gt;</span><br><span class="line">		&lt;filter-name&gt;helloFilter&lt;/filter-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">	&lt;/filter-mapping&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- servlets --&gt;</span><br><span class="line">	&lt;servlet&gt;</span><br><span class="line">		&lt;servlet-name&gt;hello_world&lt;/servlet-name&gt;</span><br><span class="line">		&lt;servlet-class&gt;demo.HelloServlet&lt;/servlet-class&gt;</span><br><span class="line">		&lt;load-on-startup&gt;1&lt;/load-on-startup&gt;</span><br><span class="line">	&lt;/servlet&gt;</span><br><span class="line"></span><br><span class="line">	&lt;servlet-mapping&gt;</span><br><span class="line">		&lt;servlet-name&gt;hello_world&lt;/servlet-name&gt;</span><br><span class="line">		&lt;url-pattern&gt;/hello&lt;/url-pattern&gt;</span><br><span class="line">	&lt;/servlet-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="HelloFilter-java"><a href="#HelloFilter-java" class="headerlink" title="HelloFilter.java"></a>HelloFilter.java</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.Filter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterChain;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.FilterConfig;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig arg0)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;Filter 初始化 & quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest req, ServletResponse res, FilterChain chain)</span> <span class="keyword">throws</span> IOException,</span><br><span class="line">			ServletException &#123;</span><br><span class="line"></span><br><span class="line">		<span class="type">HttpServletRequest</span> <span class="variable">request</span> <span class="operator">=</span> (HttpServletRequest) req;</span><br><span class="line">		System.out.println(<span class="string">&quot; 拦截 URI=&quot;</span> + request.getRequestURI());</span><br><span class="line">		chain.doFilter(req, res);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;Filter 结束 & quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="HelloServlet-java"><a href="#HelloServlet-java" class="headerlink" title="HelloServlet.java"></a>HelloServlet.java</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">service</span><span class="params">(HttpServletRequest req, HttpServletResponse res)</span></span><br><span class="line">			<span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">		</span><br><span class="line">		res.getWriter().println(<span class="string">&quot;Hello World! reqUrl=&quot;</span> + req.getRequestURI());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><ul>
-<li>页面</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/7ueRJMO.png"></p>
-<ul>
-<li>控制台</li>
-</ul>
-<blockquote>
-<p>……… 省略<br><strong>Filter 初始化 **<br>三月 19, 2015 11:43:35 上午 org.apache.coyote.AbstractProtocol start<br>信息: Starting ProtocolHandler [“http-nio-8080”]<br>三月 19, 2015 11:43:35 上午 org.apache.coyote.AbstractProtocol start<br>信息: Starting ProtocolHandler [“ajp-nio-8009”]<br>三月 19, 2015 11:43:35 上午 org.apache.catalina.startup.Catalina start<br>信息: Server startup in 1458 ms<br>** 拦截 URI&#x3D;&#x2F;corning.test.servlet_basic&#x2F;<br>拦截 URI&#x3D;&#x2F;corning.test.servlet_basic&#x2F;hello</strong>  </p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Java</category>
-        <category>Servlet</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Servlet</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>订婚的前一天</title>
-    <url>/theDayBeforeEngagement/</url>
-    <content><![CDATA[<p>今天是 <strong>2017-01-22</strong> 日，明天就要订婚了，仅以此篇纪念我们重要的一个时刻。</p>
-<h2 id="过去"><a href="#过去" class="headerlink" title="过去"></a>过去</h2><h3 id="初中"><a href="#初中" class="headerlink" title="初中"></a>初中</h3><p>我们是初中同学，而且仅仅只有一年。那时候流行“休学”，就是在初二多读一年，为了升初三的时候，没有压力，能考一个好点的高中。我休学到她的班级，然而初中并没有多少接触，那时候我刚到新的班级，又比较内向，除了座位周围的人，其他都不认识。然后第二年她也休学了，就这样错过了。  </p>
-<span id="more"></span>
-<h3 id="高中"><a href="#高中" class="headerlink" title="高中"></a>高中</h3><p>比较凑巧的是，高中我们是一个学校，是理科，而且都是 18 班，只是我比她高一个年级。高中的教室每年都会动一次，高一在一楼，高二在二楼，所以我一直在她楼上。高中第一次见面还是她跑到楼上来找我，她觉得我成绩很好，想请教些方法，问怎么学物理和数学。其实我很奇怪她怎么知道我在楼上的，而且当时我的成绩也就一般般，就没说啥了，只说了认真听课之类的吧，记不太清咯。高中也就这样过去了，除了偶尔在校园邂逅时，打个招呼，并没有其他交流。</p>
-<h3 id="大学"><a href="#大学" class="headerlink" title="大学"></a>大学</h3><p>大学我在工大，她在农大，不在一个城市，本来是一点交集都没有的。直到我大四，一个偶然的机会，初中的班长创建了 QQ 群，把我们都拉进去了。然后就互相加了好友，聊了起来，而且一发不可收拾；也许是太多年没见，也许是城市，专业都不一样，总之有太多可以聊的东西了。<br>那时候我已经在实习了，一个人在南京，空下来就找她聊天。有一次回学校，同宿舍的哥们让我给带点特产，我就顺便问下她要不要，她说要，然后我就真的给她送过去了。那时候才是高中后第一次见面，然后就正式成为我女朋友了～😄<br>她本来就比我低一个年级，然后高三的时候又复读了一年，所以那时候她才大二。有时候同学或者同事问起来，知道我女朋友才大二后，都会给个 “你真行😎” 的表情。但是我想说，我们真的是同学啊。。<br>我毕业后直接去了上海，那时候她才大四又准备考研，所以大部分时候都是我跑去合肥找她的。刚毕业，大家都懂的，没啥钱，只能一个月跑一次，有时候我出差或其他情况，时间会更久。住宾馆也要找尽量便宜的，基本都是一百以内；记得有一次周末，没有提前订房，最后找不到房间了，贵的又舍不得住，最后找了个 65 的，条件差的一 B，牙刷、毛巾、啥都没。虽然很苦，但是真的很开心  </p>
-<h3 id="研究生"><a href="#研究生" class="headerlink" title="研究生"></a>研究生</h3><p>比较幸运的是，她考研还算顺利，虽然纠结了好久，但是最后还是找了个离我最近的学校（苏州）。刚到苏州的时候，真的好开心啊，觉得离得这么近了，而且车费也便宜了好多，可以经常见面了。<br>上海到苏州高铁比普快贵一倍多，但是时间其实相差不多，所以经常我们都是做普快来回。刚开始还是我去苏州找她，后来她就不让我去了，说在苏州要住宾馆，要多花好多钱。所以虽然她在苏州待了很久，但是到最后，我去的次数一只手都数得过来。有好多地方，她说一直要带去我看的，到后来的后来，我才终于看到了～～<br>因为专业原因，她实习的比较早，实习的机会其实挺多的，但最后还是选择了“上海”，离我更近了。不过上海实在太大了，我在浦西、她在浦东，过来一趟还是要两个小时。她们实习也很辛苦，每天都得晚上 10 点多才回宿舍，然后周六还得加班。不过她一有空就会过来陪我，然后我们一起睡懒觉，一起加餐，一起包饺子，一起逛街。<br>我有时候让她周末别过来了，在宿舍好好休息，但是她会生气，说我嫌弃她，说，在我这就能不动脑子，就能好好放松。</p>
-<h2 id="现在"><a href="#现在" class="headerlink" title="现在"></a>现在</h2><p>订婚的日子其实定了很久了，但是因为上班，也才回来两天，匆匆忙忙的，跟爸妈一起才总算把东西都差不多准备好了。<br>家里的事情真的好多好多，多到心里烦躁，晚上收拾屋子，怎么都收拾不完，干脆放弃了  </p>
-<h2 id="将来"><a href="#将来" class="headerlink" title="将来"></a>将来</h2><p>过日子真的不容易，所以我的签名会是“** 家家有本难念的经 **”，希望将来也像现在一样，开开心心，一切安好～</p>
-<h2 id="终"><a href="#终" class="headerlink" title="终"></a>终</h2><p>现在是 <strong>2017-01-23 00:52:16</strong>，农历 ** 腊月二十六 **，已经是我订婚的日子啦。<br>不知不觉，写的有点多，早点睡了，安～  </p>
-]]></content>
-      <categories>
-        <category>杂文</category>
-        <category>狗粮</category>
-      </categories>
-      <tags>
-        <tag>杂文</tag>
-        <tag>狗粮</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>My First Hexo Blog</title>
-    <url>/my-first-hexo-blog/</url>
-    <content><![CDATA[<p>My first hexo blog，It’s works fine!</p>
-<p>Run faster than Octopress !</p>
-]]></content>
-      <categories>
-        <category>Test</category>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Workflowy</title>
-    <url>/workflowy/</url>
-    <content><![CDATA[<h2 id="笔记工具-WorkFlowy"><a href="#笔记工具-WorkFlowy" class="headerlink" title="笔记工具 WorkFlowy"></a>笔记工具 <a href="https://workflowy.com/" title="https:&#x2F;&#x2F;workflowy.com">WorkFlowy</a></h2><p>用起来还不错，工作日志以后不会再更新到 blog 了。😁</p>
-<p><img src="http://corningsun.qiniudn.com/blog/2017-04-25-004638.jpg-o"></p>
-<span id="more"></span>
-
-<p>每天详细 - 小时记录法</p>
-<p><img src="http://corningsun.qiniudn.com/blog/2017-04-25-005555.jpg-o"></p>
-]]></content>
-      <categories>
-        <category>Tools</category>
-        <category>WorkFlowy</category>
-      </categories>
-      <tags>
-        <tag>Tools</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>买酒店式公寓注意事项</title>
-    <url>/%E4%B9%B0%E9%85%92%E5%BA%97%E5%BC%8F%E5%85%AC%E5%AF%93%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-    <content><![CDATA[<ul>
-<li>酒店式公寓均价是低于住宅房很多的，住宅的价格完全没有参考价值，最好问下附近二手公寓多少钱</li>
-<li>注意产权年限，一般是 40 年，但是开发商拿地后造楼之类的也会耽误时间的，要看交房后实际还有多少年</li>
-<li>注意开发商公司，是否大开发商，有没有造过其他楼盘，有的话最好实地勘察下，或者网上搜索一下舆论</li>
-<li>注意公摊面积，电梯房的公摊面积很大的</li>
-<li>是否期房，现在国家政策一年一个样，交钱办好贷款后，真不一定能拿到房，但你还要还贷款。</li>
-<li>是否精装修，硬装还是软装。一般送的装修质量都很差，要做好准备。</li>
-<li>注意看周边环境，是否墓地之类的，要找本地人问</li>
-<li>周边基础设施有没有规划，地铁，公交之类的。不要信销售说的距离，要自己查资料，自己实地看。</li>
-<li>物业费价格，不同物业差距很大，而且每年都要交的。</li>
-<li>水电费价格，一般是住宅的 2 倍，而且晚上也不便宜</li>
-<li>停车位，停车费怎么算的</li>
-<li>如果准备出租的话，可以路边找中介问下周边的公寓租价</li>
-<li>定金 2 万抵 4 万之类的，这些都不会写到购房发票里面的，如果定金特别多，就要注意了，据说都是直接被销售拿去了。</li>
-<li>买房税，卖房税 要问清楚具体有哪些，比例是多少。算清楚涨幅多少才比得上一分利。</li>
-<li>关于卖房时避税 - 做低房价<ul>
-<li>做低是有成本的，要找关系，也要花钱</li>
-<li>做低后买方要承担更多的首付款，是比较难卖的</li>
-</ul>
-</li>
-<li>关于升值空间<ul>
-<li>合肥房价真心不低，涨幅不会太大</li>
-<li>一定要注意和周边公寓的价格对比，千万别买贵了</li>
-<li>租房赚钱是不现实的</li>
-</ul>
-</li>
-<li>选房<ul>
-<li>注意房子朝向，不要买朝北的</li>
-<li>不要买大户型，很难转手</li>
-<li>有些定金叫买房资格，交了只是有资格参与买房，不是就能买选中的房号的</li>
-</ul>
-</li>
-<li>最后<ul>
-<li>想清楚未来三年五年的计划，有没有别的要用钱的地方，有没有更好的投资方向</li>
-<li>不要头脑发热，定金别急着交</li>
-<li>不要头脑发热，定金别急着交</li>
-<li>不要头脑发热，定金别急着交</li>
-</ul>
-</li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>微信机器人和 Redmine 整合能做些什么？</title>
@@ -2171,6 +2145,302 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
       <tags>
         <tag>Python</tag>
         <tag>itChat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Workflowy</title>
+    <url>/workflowy/</url>
+    <content><![CDATA[<h2 id="笔记工具-WorkFlowy"><a href="#笔记工具-WorkFlowy" class="headerlink" title="笔记工具 WorkFlowy"></a>笔记工具 <a href="https://workflowy.com/" title="https:&#x2F;&#x2F;workflowy.com">WorkFlowy</a></h2><p>用起来还不错，工作日志以后不会再更新到 blog 了。😁</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-04-25-004638.jpg-o"></p>
+<span id="more"></span>
+
+<p>每天详细 - 小时记录法</p>
+<p><img src="http://corningsun.qiniudn.com/blog/2017-04-25-005555.jpg-o"></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>WorkFlowy</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>订婚的前一天</title>
+    <url>/theDayBeforeEngagement/</url>
+    <content><![CDATA[<p>今天是 <strong>2017-01-22</strong> 日，明天就要订婚了，仅以此篇纪念我们重要的一个时刻。</p>
+<h2 id="过去"><a href="#过去" class="headerlink" title="过去"></a>过去</h2><h3 id="初中"><a href="#初中" class="headerlink" title="初中"></a>初中</h3><p>我们是初中同学，而且仅仅只有一年。那时候流行“休学”，就是在初二多读一年，为了升初三的时候，没有压力，能考一个好点的高中。我休学到她的班级，然而初中并没有多少接触，那时候我刚到新的班级，又比较内向，除了座位周围的人，其他都不认识。然后第二年她也休学了，就这样错过了。  </p>
+<span id="more"></span>
+<h3 id="高中"><a href="#高中" class="headerlink" title="高中"></a>高中</h3><p>比较凑巧的是，高中我们是一个学校，是理科，而且都是 18 班，只是我比她高一个年级。高中的教室每年都会动一次，高一在一楼，高二在二楼，所以我一直在她楼上。高中第一次见面还是她跑到楼上来找我，她觉得我成绩很好，想请教些方法，问怎么学物理和数学。其实我很奇怪她怎么知道我在楼上的，而且当时我的成绩也就一般般，就没说啥了，只说了认真听课之类的吧，记不太清咯。高中也就这样过去了，除了偶尔在校园邂逅时，打个招呼，并没有其他交流。</p>
+<h3 id="大学"><a href="#大学" class="headerlink" title="大学"></a>大学</h3><p>大学我在工大，她在农大，不在一个城市，本来是一点交集都没有的。直到我大四，一个偶然的机会，初中的班长创建了 QQ 群，把我们都拉进去了。然后就互相加了好友，聊了起来，而且一发不可收拾；也许是太多年没见，也许是城市，专业都不一样，总之有太多可以聊的东西了。<br>那时候我已经在实习了，一个人在南京，空下来就找她聊天。有一次回学校，同宿舍的哥们让我给带点特产，我就顺便问下她要不要，她说要，然后我就真的给她送过去了。那时候才是高中后第一次见面，然后就正式成为我女朋友了～😄<br>她本来就比我低一个年级，然后高三的时候又复读了一年，所以那时候她才大二。有时候同学或者同事问起来，知道我女朋友才大二后，都会给个 “你真行😎” 的表情。但是我想说，我们真的是同学啊。。<br>我毕业后直接去了上海，那时候她才大四又准备考研，所以大部分时候都是我跑去合肥找她的。刚毕业，大家都懂的，没啥钱，只能一个月跑一次，有时候我出差或其他情况，时间会更久。住宾馆也要找尽量便宜的，基本都是一百以内；记得有一次周末，没有提前订房，最后找不到房间了，贵的又舍不得住，最后找了个 65 的，条件差的一 B，牙刷、毛巾、啥都没。虽然很苦，但是真的很开心  </p>
+<h3 id="研究生"><a href="#研究生" class="headerlink" title="研究生"></a>研究生</h3><p>比较幸运的是，她考研还算顺利，虽然纠结了好久，但是最后还是找了个离我最近的学校（苏州）。刚到苏州的时候，真的好开心啊，觉得离得这么近了，而且车费也便宜了好多，可以经常见面了。<br>上海到苏州高铁比普快贵一倍多，但是时间其实相差不多，所以经常我们都是做普快来回。刚开始还是我去苏州找她，后来她就不让我去了，说在苏州要住宾馆，要多花好多钱。所以虽然她在苏州待了很久，但是到最后，我去的次数一只手都数得过来。有好多地方，她说一直要带去我看的，到后来的后来，我才终于看到了～～<br>因为专业原因，她实习的比较早，实习的机会其实挺多的，但最后还是选择了“上海”，离我更近了。不过上海实在太大了，我在浦西、她在浦东，过来一趟还是要两个小时。她们实习也很辛苦，每天都得晚上 10 点多才回宿舍，然后周六还得加班。不过她一有空就会过来陪我，然后我们一起睡懒觉，一起加餐，一起包饺子，一起逛街。<br>我有时候让她周末别过来了，在宿舍好好休息，但是她会生气，说我嫌弃她，说，在我这就能不动脑子，就能好好放松。</p>
+<h2 id="现在"><a href="#现在" class="headerlink" title="现在"></a>现在</h2><p>订婚的日子其实定了很久了，但是因为上班，也才回来两天，匆匆忙忙的，跟爸妈一起才总算把东西都差不多准备好了。<br>家里的事情真的好多好多，多到心里烦躁，晚上收拾屋子，怎么都收拾不完，干脆放弃了  </p>
+<h2 id="将来"><a href="#将来" class="headerlink" title="将来"></a>将来</h2><p>过日子真的不容易，所以我的签名会是“** 家家有本难念的经 **”，希望将来也像现在一样，开开心心，一切安好～</p>
+<h2 id="终"><a href="#终" class="headerlink" title="终"></a>终</h2><p>现在是 <strong>2017-01-23 00:52:16</strong>，农历 ** 腊月二十六 **，已经是我订婚的日子啦。<br>不知不觉，写的有点多，早点睡了，安～  </p>
+]]></content>
+      <categories>
+        <category>杂文</category>
+        <category>狗粮</category>
+      </categories>
+      <tags>
+        <tag>杂文</tag>
+        <tag>狗粮</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>My First Hexo Blog</title>
+    <url>/my-first-hexo-blog/</url>
+    <content><![CDATA[<p>My first hexo blog，It’s works fine!</p>
+<p>Run faster than Octopress !</p>
+]]></content>
+      <categories>
+        <category>Test</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>买酒店式公寓注意事项</title>
+    <url>/%E4%B9%B0%E9%85%92%E5%BA%97%E5%BC%8F%E5%85%AC%E5%AF%93%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    <content><![CDATA[<ul>
+<li>酒店式公寓均价是低于住宅房很多的，住宅的价格完全没有参考价值，最好问下附近二手公寓多少钱</li>
+<li>注意产权年限，一般是 40 年，但是开发商拿地后造楼之类的也会耽误时间的，要看交房后实际还有多少年</li>
+<li>注意开发商公司，是否大开发商，有没有造过其他楼盘，有的话最好实地勘察下，或者网上搜索一下舆论</li>
+<li>注意公摊面积，电梯房的公摊面积很大的</li>
+<li>是否期房，现在国家政策一年一个样，交钱办好贷款后，真不一定能拿到房，但你还要还贷款。</li>
+<li>是否精装修，硬装还是软装。一般送的装修质量都很差，要做好准备。</li>
+<li>注意看周边环境，是否墓地之类的，要找本地人问</li>
+<li>周边基础设施有没有规划，地铁，公交之类的。不要信销售说的距离，要自己查资料，自己实地看。</li>
+<li>物业费价格，不同物业差距很大，而且每年都要交的。</li>
+<li>水电费价格，一般是住宅的 2 倍，而且晚上也不便宜</li>
+<li>停车位，停车费怎么算的</li>
+<li>如果准备出租的话，可以路边找中介问下周边的公寓租价</li>
+<li>定金 2 万抵 4 万之类的，这些都不会写到购房发票里面的，如果定金特别多，就要注意了，据说都是直接被销售拿去了。</li>
+<li>买房税，卖房税 要问清楚具体有哪些，比例是多少。算清楚涨幅多少才比得上一分利。</li>
+<li>关于卖房时避税 - 做低房价<ul>
+<li>做低是有成本的，要找关系，也要花钱</li>
+<li>做低后买方要承担更多的首付款，是比较难卖的</li>
+</ul>
+</li>
+<li>关于升值空间<ul>
+<li>合肥房价真心不低，涨幅不会太大</li>
+<li>一定要注意和周边公寓的价格对比，千万别买贵了</li>
+<li>租房赚钱是不现实的</li>
+</ul>
+</li>
+<li>选房<ul>
+<li>注意房子朝向，不要买朝北的</li>
+<li>不要买大户型，很难转手</li>
+<li>有些定金叫买房资格，交了只是有资格参与买房，不是就能买选中的房号的</li>
+</ul>
+</li>
+<li>最后<ul>
+<li>想清楚未来三年五年的计划，有没有别的要用钱的地方，有没有更好的投资方向</li>
+<li>不要头脑发热，定金别急着交</li>
+<li>不要头脑发热，定金别急着交</li>
+<li>不要头脑发热，定金别急着交</li>
+</ul>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>About Clover</title>
+    <url>/clover/</url>
+    <content><![CDATA[<p><a href="http://cn.ejie.me/" title="http:&#x2F;&#x2F;cn.ejie.me&#x2F;">Clover</a> 是 ** 易捷科技 ** 开发的一款 Windows Explorer 资源管理器一个扩展，为其增加类似谷歌 Chrome 浏览器的多标签页功能。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/corningsun/corningsun.github.io@blog_img/2023/6SWvOI4.jpg"></p>
+<p><a href="http://ejie.me/download" title="http:&#x2F;&#x2F;ejie.me&#x2F;download">Clover 下载</a></p>
+<span id="more"></span>
+
+<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><p>方便的 Tab 页功能</p>
+<p>要掌握功能强大，操作简单的标签页，只需记住 Ctrl+T 新开页面，Ctrl+W 关闭页面，Ctrl+Tab 切换页面，工作效率提高何止一倍！<br>操作系统无缝集成</p>
+<p>Clover 通过插件的形式集成到 Windows Explorer，保留您通常的使用习惯，无需学习新的文件管理操作，马上就可以使用啦。<br>快如闪电的书签栏</p>
+<p>按 Ctrl+D 添加当前路径，或者直接将文件夹拖入书签栏。再也不用到处寻找要访问的文件夹了，瞬间到达，何等痛快！</p>
+<h2 id="使用帮助"><a href="#使用帮助" class="headerlink" title="使用帮助"></a>使用帮助</h2><ul>
+<li>Q: Clover 是否支持 Windows2000 系统？</li>
+</ul>
+<p>A: Clover 目前只支持 Windows XP 及之后各个 Windows 版本 （32bit&#x2F;64bit），同时支持英文和中文等大部分常用语言。</p>
+<ul>
+<li>Q: 安装时 360 安全卫士提示 regsvr32 进程安装浏览器插件，这个软件安全吗？</li>
+</ul>
+<p>A: Clover 通过 Windows Explorer 插件的形式集成到系统资源管理器中，获取资源管理器新开窗口的消息，能够自动将外部打开的资源管理器窗口吸附到 Clover 窗口中。 Clover 程序不会获取用户的任何消息。</p>
+<ul>
+<li>Q: ：安装后会自动吸附 Windows Explorer，但是现在不行了？</li>
+</ul>
+<p>A: 有些用户安装后，通过优化软件禁用了 ExplorerWatcher 插件，会造成这种情况，解除插件的禁用即可（请从 IE 浏览器–&gt; 管理加载项菜单中查看，是否被禁用）。</p>
+<ul>
+<li>Q: 我确认 ExplorerWatcher 已经启用了，为何还是无法自动吸附？</li>
+</ul>
+<p>A: 请检查注册表的下列选项，检查浏览器扩展功能是否被禁用了。<br>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]<br>“Enable Browser Extensions”&#x3D;”yes”</p>
+<ul>
+<li>Q: 您会把 Clover 开源吗?</li>
+</ul>
+<p>A: 很多朋友咨询这个问题，因为以下几个原因，暂时不会:</p>
+<ol>
+<li>代码仓促写就，还有很多问题。</li>
+<li>长期的开发计划和开发方向还不清晰。</li>
+<li>Clover 品牌还不够突出，为避免被山寨，暂时不能公开源码。</li>
+</ol>
+<ul>
+<li>Q: 能不能把任务栏上的 Clover 三叶草图标换回资源管理器的图标？</li>
+</ul>
+<p>A: 有些人不喜欢 Clover 的图标，也有一些人很喜欢。所以我暂时不修改 Clover 的图标，直到我发现一个更好的，或者有人帮我做出一个更漂亮的图标。网友 3man 和 nick 提供了一个图标<br><img src="http://ejie.me/images/Windows_Explorer_Clover.ico" alt="by 3man" title="by 3man"><br>  <img src="http://ejie.me/images/clover3_32.ico" alt="by nick" title="by nick"><br>，你暂时可以用来修改下面这个快捷方式的图标:<br><code>C:\Users\YOUR_USERNAME\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Clover.lnk</code></p>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ctrl + N</td>
+<td>打开一个新的 Clover 窗口。</td>
+</tr>
+<tr>
+<td>Ctrl + T</td>
+<td>新建标签页。</td>
+</tr>
+<tr>
+<td>Ctrl + W</td>
+<td>关闭当前标签页。</td>
+</tr>
+<tr>
+<td>Ctrl + Shift + T</td>
+<td>重新打开关闭的标签页。</td>
+</tr>
+<tr>
+<td>Ctrl + D</td>
+<td>为此页添加书签（有选择文件、文件夹的情况下，是删除文件）。</td>
+</tr>
+<tr>
+<td>Ctrl + Shift + D</td>
+<td>为所有打开的标签页添加书签。</td>
+</tr>
+<tr>
+<td>Ctrl + Tab</td>
+<td>切换到下一个标签页。</td>
+</tr>
+<tr>
+<td>Ctrl + Shift + Tab</td>
+<td>切换到前一个标签页。</td>
+</tr>
+<tr>
+<td>Ctrl + Shift + B</td>
+<td>显示或隐藏书签栏。</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Tools</category>
+        <category>Clover</category>
+      </categories>
+      <tags>
+        <tag>Tools</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一张图看懂 UML 类图</title>
+    <url>/%E4%B8%80%E5%BC%A0%E5%9B%BE%E7%9C%8B%E6%87%82UML%E7%B1%BB%E5%9B%BE/</url>
+    <content><![CDATA[<p><img src="http://corningsun.qiniudn.com/blog/2017-11-20-091405.jpg-o"></p>
+]]></content>
+      <categories>
+        <category>UML</category>
+      </categories>
+      <tags>
+        <tag>UML</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>十大经典排序算法</title>
+    <url>/%E5%8D%81%E5%A4%A7%E7%BB%8F%E5%85%B8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>** 来源 **：<a href="https://github.com/hustcc/JS-Sorting-Algorithm">Github JS-Sorting-Algorithm</a></p>
+<hr>
+<p>排序算法是《数据结构与算法》中最基本的算法之一。<br>排序算法可以分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，而外部排序是因排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。常见的内部排序算法有：插入排序、希尔排序、选择排序、冒泡排序、归并排序、快速排序、堆排序、基数排序等。用一张图概括：<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-sort.png-o"></p>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>冒泡排序（Bubble Sort）也是一种简单直观的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢 “浮” 到数列的顶端。</p>
+<p>** 算法步骤 **</p>
+<ol>
+<li>比较相邻的元素。如果第一个比第二个大，就交换他们两个。</li>
+<li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数。</li>
+<li>针对所有的元素重复以上的步骤，除了最后一个。</li>
+<li>持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-bubbleSort.gif-o"></li>
+</ol>
+<span id="more"></span>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序是一种简单直观的排序算法，无论什么数据进去都是 O(n²) 的时间复杂度。所以用到它的时候，数据规模越小越好。唯一的好处可能就是不占用额外的内存空间了吧。</p>
+<p>** 算法步骤 **</p>
+<ol>
+<li>首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</li>
+<li>再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</li>
+<li>重复第二步，直到所有元素均排序完毕。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-selectionSort.gif-o"></li>
+</ol>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>插入排序的代码实现虽然没有冒泡排序和选择排序那么简单粗暴，但它的原理应该是最容易理解的了，因为只要打过扑克牌的人都应该能够秒懂。插入排序是一种最简单直观的排序算法，它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。<br>插入排序和冒泡排序一样，也有一种优化算法，叫做拆半插入。</p>
+<p>** 算法步骤 ** </p>
+<ol>
+<li>将第一待排序序列第一个元素看做一个有序序列，把第二个元素到最后一个元素当成是未排序序列。</li>
+<li>从头到尾依次扫描未排序序列，将扫描到的每个元素插入有序序列的适当位置。（如果待插入的元素与有序序列中的某个元素相等，则将待插入元素插入到相等元素的后面。）<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-insertionSort.gif-o"></li>
+</ol>
+<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>希尔排序，也称递减增量排序算法，是插入排序的一种更高效的改进版本。但希尔排序是非稳定排序算法。<br>希尔排序是基于插入排序的以下两点性质而提出改进方法的：</p>
+<ul>
+<li>插入排序在对几乎已经排好序的数据操作时，效率高，即可以达到线性排序的效率；</li>
+<li>但插入排序一般来说是低效的，因为插入排序每次只能将数据移动一位；<br>希尔排序的基本思想是：先将整个待排序的记录序列分割成为若干子序列分别进行直接插入排序，待整个序列中的记录 “基本有序” 时，再对全体记录进行依次直接插入排序。</li>
+</ul>
+<p>** 算法步骤 ** </p>
+<ol>
+<li>选择一个增量序列 t1，t2，……，tk，其中 ti &gt; tj, tk &#x3D; 1；</li>
+<li>按增量序列个数 k，对序列进行 k 趟排序；</li>
+<li>每趟排序，根据对应的增量 ti，将待排序列分割成若干长度为 m 的子序列，分别对各子表进行直接插入排序。仅增量因子为 1 时，整个序列作为一个表来处理，表长度即为整个序列的长度。</li>
+</ol>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并排序（Merge sort）是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。<br>作为一种典型的分而治之思想的算法应用，归并排序的实现由两种方法：</p>
+<ul>
+<li>自上而下的递归（所有递归的方法都可以用迭代重写，所以就有了第 2 种方法）；</li>
+<li>自下而上的迭代；<br>和选择排序一样，归并排序的性能不受输入数据的影响，但表现比选择排序好的多，因为始终都是 O(nlogn) 的时间复杂度。代价是需要额外的内存空间。</li>
+</ul>
+<p>** 算法步骤 ** </p>
+<ol>
+<li>申请空间，使其大小为两个已经排序序列之和，该空间用来存放合并后的序列；</li>
+<li>设定两个指针，最初位置分别为两个已经排序序列的起始位置；</li>
+<li>比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置；</li>
+<li>重复步骤 3 直到某一指针达到序列尾；</li>
+<li>将另一序列剩下的所有元素直接复制到合并序列尾。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-mergeSort.gif-o"></li>
+</ol>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>快速排序是由东尼 · 霍尔所发展的一种排序算法。在平均状况下，排序 n 个项目要 Ο(nlogn) 次比较。在最坏状况下则需要 Ο(n2) 次比较，但这种状况并不常见。事实上，快速排序通常明显比其他 Ο(nlogn) 算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地被实现出来。<br>快速排序使用分治法（Divide and conquer）策略来把一个串行（list）分为两个子串行（sub-lists）。<br>快速排序又是一种分而治之思想在排序算法上的典型应用。本质上来看，快速排序应该算是在冒泡排序基础上的递归分治法。<br>快速排序的名字起的是简单粗暴，因为一听到这个名字你就知道它存在的意义，就是快，而且效率高！它是处理大数据最快的排序算法之一了。虽然 Worst Case 的时间复杂度达到了 O(n²)，但是人家就是优秀，在大多数情况下都比平均时间复杂度为 O(n logn) 的排序算法表现要更好，可是这是为什么呢，我也不知道。好在我的强迫症又犯了，查了 N 多资料终于在《算法艺术与信息学竞赛》上找到了满意的答案：</p>
+<blockquote>
+<p>快速排序的最坏运行情况是 O(n²)，比如说顺序数列的快排。但它的平摊期望时间是 O(nlogn)，且 O(nlogn) 记号中隐含的常数因子很小，比复杂度稳定等于 O(nlogn) 的归并排序要小很多。所以，对绝大多数顺序性较弱的随机数列而言，快速排序总是优于归并排序。</p>
+</blockquote>
+<p>** 算法步骤 ** </p>
+<ol>
+<li>从数列中挑出一个元素，称为 “基准”（pivot）;</li>
+<li>重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作；</li>
+<li>递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序；<br>递归的最底部情形，是数列的大小是零或一，也就是永远都已经被排序好了。虽然一直递归下去，但是这个算法总会退出，因为在每次的迭代（iteration）中，它至少会把一个元素摆到它最后的位置去。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-quickSort.gif-o"></li>
+</ol>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p>堆排序（Heapsort）是指利用堆这种数据结构所设计的一种排序算法。堆积是一个近似完全二叉树的结构，并同时满足堆积的性质：即子结点的键值或索引总是小于（或者大于）它的父节点。堆排序可以说是一种利用堆的概念来排序的选择排序。分为两种方法：</p>
+<ol>
+<li>大顶堆：每个节点的值都大于或等于其子节点的值，在堆排序算法中用于升序排列；</li>
+<li>小顶堆：每个节点的值都小于或等于其子节点的值，在堆排序算法中用于降序排列；<br>堆排序的平均时间复杂度为 Ο(nlogn)。</li>
+</ol>
+<p>** 算法步骤 ** </p>
+<ol>
+<li>创建一个堆 H[0……n-1]；</li>
+<li>把堆首（最大值）和堆尾互换；</li>
+<li>把堆的尺寸缩小 1，并调用 shift_down(0)，目的是把新的数组顶端数据调整到相应位置；</li>
+<li>重复步骤 2，直到堆的尺寸为 1。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-heapSort.gif-o"></li>
+</ol>
+<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>计数排序的核心在于将输入的数据值转化为键存储在额外开辟的数组空间中。作为一种线性时间复杂度的排序，计数排序要求输入的数据必须是有确定范围的整数。<br>注意：计数排序对数组是有限制的，数组取值范围为 <code>[0, maxValue]</code><br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-countingSort.gif-o"></p>
+<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>桶排序是计数排序的升级版。它利用了函数的映射关系，高效与否的关键就在于这个映射函数的确定。为了使桶排序更加高效，我们需要做到这两点：</p>
+<ol>
+<li>在额外空间充足的情况下，尽量增大桶的数量</li>
+<li>使用的映射函数能够将输入的 N 个数据均匀的分配到 K 个桶中<br>同时，对于桶中元素的排序，选择何种比较排序算法对于性能的影响至关重要。<br>** 什么时候最快 **<br>当输入的数据可以均匀的分配到每一个桶中。<br>** 什么时候最慢 **<br>当输入的数据被分配到了同一个桶中。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-bubbleSort.gif-o"></li>
+</ol>
+<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-radixSort.gif-o"><br>** 基数排序 vs 计数排序 vs 桶排序 **<br>基数排序有两种方法：<br>这三种排序算法都利用了桶的概念，但对桶的使用方法上有明显差异：</p>
+<ul>
+<li>计数排序：每个桶只存储单一键值；</li>
+<li>桶排序：每个桶存储一定范围的数值；</li>
+<li>基数排序：根据键值的每位数字来分配桶；</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>code</tag>
       </tags>
   </entry>
   <entry>
@@ -2293,109 +2563,6 @@ SJL22Engine PATCH001: 解决加密机预产生密钥不够 10 对时，导出密
 ]]></content>
       <tags>
         <tag>杂文</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>十大经典排序算法</title>
-    <url>/%E5%8D%81%E5%A4%A7%E7%BB%8F%E5%85%B8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<p>** 来源 **：<a href="https://github.com/hustcc/JS-Sorting-Algorithm">Github JS-Sorting-Algorithm</a></p>
-<hr>
-<p>排序算法是《数据结构与算法》中最基本的算法之一。<br>排序算法可以分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，而外部排序是因排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。常见的内部排序算法有：插入排序、希尔排序、选择排序、冒泡排序、归并排序、快速排序、堆排序、基数排序等。用一张图概括：<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-sort.png-o"></p>
-<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>冒泡排序（Bubble Sort）也是一种简单直观的排序算法。它重复地走访过要排序的数列，一次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢 “浮” 到数列的顶端。</p>
-<p>** 算法步骤 **</p>
-<ol>
-<li>比较相邻的元素。如果第一个比第二个大，就交换他们两个。</li>
-<li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数。</li>
-<li>针对所有的元素重复以上的步骤，除了最后一个。</li>
-<li>持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-bubbleSort.gif-o"></li>
-</ol>
-<span id="more"></span>
-<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序是一种简单直观的排序算法，无论什么数据进去都是 O(n²) 的时间复杂度。所以用到它的时候，数据规模越小越好。唯一的好处可能就是不占用额外的内存空间了吧。</p>
-<p>** 算法步骤 **</p>
-<ol>
-<li>首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置</li>
-<li>再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾。</li>
-<li>重复第二步，直到所有元素均排序完毕。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-selectionSort.gif-o"></li>
-</ol>
-<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>插入排序的代码实现虽然没有冒泡排序和选择排序那么简单粗暴，但它的原理应该是最容易理解的了，因为只要打过扑克牌的人都应该能够秒懂。插入排序是一种最简单直观的排序算法，它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。<br>插入排序和冒泡排序一样，也有一种优化算法，叫做拆半插入。</p>
-<p>** 算法步骤 ** </p>
-<ol>
-<li>将第一待排序序列第一个元素看做一个有序序列，把第二个元素到最后一个元素当成是未排序序列。</li>
-<li>从头到尾依次扫描未排序序列，将扫描到的每个元素插入有序序列的适当位置。（如果待插入的元素与有序序列中的某个元素相等，则将待插入元素插入到相等元素的后面。）<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-insertionSort.gif-o"></li>
-</ol>
-<h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>希尔排序，也称递减增量排序算法，是插入排序的一种更高效的改进版本。但希尔排序是非稳定排序算法。<br>希尔排序是基于插入排序的以下两点性质而提出改进方法的：</p>
-<ul>
-<li>插入排序在对几乎已经排好序的数据操作时，效率高，即可以达到线性排序的效率；</li>
-<li>但插入排序一般来说是低效的，因为插入排序每次只能将数据移动一位；<br>希尔排序的基本思想是：先将整个待排序的记录序列分割成为若干子序列分别进行直接插入排序，待整个序列中的记录 “基本有序” 时，再对全体记录进行依次直接插入排序。</li>
-</ul>
-<p>** 算法步骤 ** </p>
-<ol>
-<li>选择一个增量序列 t1，t2，……，tk，其中 ti &gt; tj, tk &#x3D; 1；</li>
-<li>按增量序列个数 k，对序列进行 k 趟排序；</li>
-<li>每趟排序，根据对应的增量 ti，将待排序列分割成若干长度为 m 的子序列，分别对各子表进行直接插入排序。仅增量因子为 1 时，整个序列作为一个表来处理，表长度即为整个序列的长度。</li>
-</ol>
-<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并排序（Merge sort）是建立在归并操作上的一种有效的排序算法。该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。<br>作为一种典型的分而治之思想的算法应用，归并排序的实现由两种方法：</p>
-<ul>
-<li>自上而下的递归（所有递归的方法都可以用迭代重写，所以就有了第 2 种方法）；</li>
-<li>自下而上的迭代；<br>和选择排序一样，归并排序的性能不受输入数据的影响，但表现比选择排序好的多，因为始终都是 O(nlogn) 的时间复杂度。代价是需要额外的内存空间。</li>
-</ul>
-<p>** 算法步骤 ** </p>
-<ol>
-<li>申请空间，使其大小为两个已经排序序列之和，该空间用来存放合并后的序列；</li>
-<li>设定两个指针，最初位置分别为两个已经排序序列的起始位置；</li>
-<li>比较两个指针所指向的元素，选择相对小的元素放入到合并空间，并移动指针到下一位置；</li>
-<li>重复步骤 3 直到某一指针达到序列尾；</li>
-<li>将另一序列剩下的所有元素直接复制到合并序列尾。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-mergeSort.gif-o"></li>
-</ol>
-<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>快速排序是由东尼 · 霍尔所发展的一种排序算法。在平均状况下，排序 n 个项目要 Ο(nlogn) 次比较。在最坏状况下则需要 Ο(n2) 次比较，但这种状况并不常见。事实上，快速排序通常明显比其他 Ο(nlogn) 算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地被实现出来。<br>快速排序使用分治法（Divide and conquer）策略来把一个串行（list）分为两个子串行（sub-lists）。<br>快速排序又是一种分而治之思想在排序算法上的典型应用。本质上来看，快速排序应该算是在冒泡排序基础上的递归分治法。<br>快速排序的名字起的是简单粗暴，因为一听到这个名字你就知道它存在的意义，就是快，而且效率高！它是处理大数据最快的排序算法之一了。虽然 Worst Case 的时间复杂度达到了 O(n²)，但是人家就是优秀，在大多数情况下都比平均时间复杂度为 O(n logn) 的排序算法表现要更好，可是这是为什么呢，我也不知道。好在我的强迫症又犯了，查了 N 多资料终于在《算法艺术与信息学竞赛》上找到了满意的答案：</p>
-<blockquote>
-<p>快速排序的最坏运行情况是 O(n²)，比如说顺序数列的快排。但它的平摊期望时间是 O(nlogn)，且 O(nlogn) 记号中隐含的常数因子很小，比复杂度稳定等于 O(nlogn) 的归并排序要小很多。所以，对绝大多数顺序性较弱的随机数列而言，快速排序总是优于归并排序。</p>
-</blockquote>
-<p>** 算法步骤 ** </p>
-<ol>
-<li>从数列中挑出一个元素，称为 “基准”（pivot）;</li>
-<li>重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作；</li>
-<li>递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序；<br>递归的最底部情形，是数列的大小是零或一，也就是永远都已经被排序好了。虽然一直递归下去，但是这个算法总会退出，因为在每次的迭代（iteration）中，它至少会把一个元素摆到它最后的位置去。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-quickSort.gif-o"></li>
-</ol>
-<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p>堆排序（Heapsort）是指利用堆这种数据结构所设计的一种排序算法。堆积是一个近似完全二叉树的结构，并同时满足堆积的性质：即子结点的键值或索引总是小于（或者大于）它的父节点。堆排序可以说是一种利用堆的概念来排序的选择排序。分为两种方法：</p>
-<ol>
-<li>大顶堆：每个节点的值都大于或等于其子节点的值，在堆排序算法中用于升序排列；</li>
-<li>小顶堆：每个节点的值都小于或等于其子节点的值，在堆排序算法中用于降序排列；<br>堆排序的平均时间复杂度为 Ο(nlogn)。</li>
-</ol>
-<p>** 算法步骤 ** </p>
-<ol>
-<li>创建一个堆 H[0……n-1]；</li>
-<li>把堆首（最大值）和堆尾互换；</li>
-<li>把堆的尺寸缩小 1，并调用 shift_down(0)，目的是把新的数组顶端数据调整到相应位置；</li>
-<li>重复步骤 2，直到堆的尺寸为 1。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-heapSort.gif-o"></li>
-</ol>
-<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>计数排序的核心在于将输入的数据值转化为键存储在额外开辟的数组空间中。作为一种线性时间复杂度的排序，计数排序要求输入的数据必须是有确定范围的整数。<br>注意：计数排序对数组是有限制的，数组取值范围为 <code>[0, maxValue]</code><br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-countingSort.gif-o"></p>
-<h2 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h2><p>桶排序是计数排序的升级版。它利用了函数的映射关系，高效与否的关键就在于这个映射函数的确定。为了使桶排序更加高效，我们需要做到这两点：</p>
-<ol>
-<li>在额外空间充足的情况下，尽量增大桶的数量</li>
-<li>使用的映射函数能够将输入的 N 个数据均匀的分配到 K 个桶中<br>同时，对于桶中元素的排序，选择何种比较排序算法对于性能的影响至关重要。<br>** 什么时候最快 **<br>当输入的数据可以均匀的分配到每一个桶中。<br>** 什么时候最慢 **<br>当输入的数据被分配到了同一个桶中。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-bubbleSort.gif-o"></li>
-</ol>
-<h2 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h2><p>基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。<br><img src="http://corningsun.qiniudn.com/blog/2018-07-09-radixSort.gif-o"><br>** 基数排序 vs 计数排序 vs 桶排序 **<br>基数排序有两种方法：<br>这三种排序算法都利用了桶的概念，但对桶的使用方法上有明显差异：</p>
-<ul>
-<li>计数排序：每个桶只存储单一键值；</li>
-<li>桶排序：每个桶存储一定范围的数值；</li>
-<li>基数排序：根据键值的每位数字来分配桶；</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>code</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一张图看懂 UML 类图</title>
-    <url>/%E4%B8%80%E5%BC%A0%E5%9B%BE%E7%9C%8B%E6%87%82UML%E7%B1%BB%E5%9B%BE/</url>
-    <content><![CDATA[<p><img src="http://corningsun.qiniudn.com/blog/2017-11-20-091405.jpg-o"></p>
-]]></content>
-      <categories>
-        <category>UML</category>
-      </categories>
-      <tags>
-        <tag>UML</tag>
       </tags>
   </entry>
   <entry>
